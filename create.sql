@@ -9,7 +9,8 @@ CREATE TABLE location (
 
 CREATE TABLE in_location (
 	uid INT UNSIGNED NOT NULL PRIMARY KEY REFERENCES location(uid),
-	enclosing_id INT UNSIGNED NOT NULL REFERENCES location(uid));
+	enclosing_id INT UNSIGNED NOT NULL REFERENCES location(uid)
+	);
 
 CREATE TABLE condition_name (
 	condition_id INT UNSIGNED NOT NULL,

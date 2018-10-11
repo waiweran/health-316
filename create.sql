@@ -1,46 +1,60 @@
 CREATE TABLE location (
 	uid CHAR(32) NOT NULL PRIMARY KEY,
 	name VARCHAR(256) NOT NULL,
-	type CHAR(7) NOT NULL CHECK(type = 'country' OR type = 'state' OR type = 'county')
-	population BIGINT UNSIGNED,
+	type CHAR(7) NOT NULL CHECK(type = 'country' OR type = 'state' OR type = 'county'),
+	population BIGINT,
 	avg_income DECIMAL(12,2),
-	gdp BIGINT UNSIGNED,
+	gdp BIGINT
 	);
 
 CREATE TABLE in_location (
-	uid INT UNSIGNED NOT NULL PRIMARY KEY REFERENCES location(uid),
-	enclosing_id INT UNSIGNED NOT NULL REFERENCES location(uid)
+	uid CHAR(32) NOT NULL PRIMARY KEY REFERENCES location(uid),
+	enclosing_id CHAR(32) NOT NULL REFERENCES location(uid)
+	);
+
+CREATE TABLE condition (
+	uid CHAR(32) NOT NULL PRIMARY KEY
 	);
 
 CREATE TABLE condition_name (
-	condition_id INT UNSIGNED NOT NULL,
-	name VARCHAR(256) NOT NULL,
-	PRIMARY KEY(condition_id, name)
+	name VARCHAR(256) NOT NULL PRIMARY KEY,
+	condition_id CHAR(32) NOT NULL REFERENCES condition(uid)
 	);
 
 CREATE TABLE datapoint (
-	condition_id CHAR(32) NOT NULL REFERENCES condition_name(condition_id),
+	condition_id CHAR(32) NOT NULL REFERENCES condition(uid),
 	location_id CHAR(32) NOT NULL REFERENCES location(uid),
-	prevalence BIGINT UNSIGNED,
-	incidence BIGINT UNSIGNED,
-	mortality BIGINT UNSIGNED,
-	year SMALLINT UNSIGNED NOT NULL,
-	min_age TINYINT UNSIGNED NOT NULL,
-	max_age TINYINT UNSIGNED NOT NULL,
+	prevalence BIGINT,
+	incidence BIGINT,
+	mortality BIGINT,
+	year SMALLINT NOT NULL,
+	min_age SMALLINT NOT NULL,
+	max_age SMALLINT NOT NULL,
 	gender CHAR(6) NOT NULL CHECK(gender = 'male' OR gender = 'female' OR gender = 'all'),
 	race_ethnicity VARCHAR(128) NOT NULL,
 	PRIMARY KEY(condition_id, location_id, year, min_age, max_age, gender, race_ethnicity)
 	);
 
-CREATE TRIGGER in_restriction 
-	BEFORE INSERT OR UPDATE ON in_location
-	REFERENCING NEW TABLE AS new_in 
-	WHEN NOT EXISTS (SELECT * FROM location AS l1, location AS l2, new_in
-		WHERE l1.uid = new_in.uid AND l2.uid = new_in.enclosing_ID
+CREATE FUNCTION TF_in_restriction() RETURNS TRIGGER AS $$
+BEGIN
+	IF NOT EXISTS (SELECT * FROM location AS l1, location AS l2, NEW
+		WHERE l1.uid = NEW.uid AND l2.uid = NEW.enclosing_id
 		AND ((l1.type = 'state' AND l2.type = 'state') 
 			OR (l1.type = 'country' AND l2.type = 'country') 
 			OR (l1.type = 'county' AND l2.type = 'county')
 		 	OR (l1.type = 'country' AND l2.type = 'state') 
 		 	OR (l1.type = 'country' AND l2.type = 'county') 
 		 	OR (l1.type = 'state' AND l2.type = 'county'))
-		);
+		) THEN
+		RAISE EXCEPTION 'Invalid location hierarchy';
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER TG_in_restriction
+	BEFORE INSERT OR UPDATE ON in_location
+	FOR EACH ROW
+	EXECUTE PROCEDURE TF_in_restriction();
+
+

@@ -1,23 +1,16 @@
 CREATE TABLE location (
 	uid INT UNSIGNED NOT NULL PRIMARY KEY,
 	name VARCHAR(256) NOT NULL,
+	type CHAR(7) NOT NULL CHECK(type = 'country' OR type = 'state' OR type = 'county')
 	population BIGINT UNSIGNED,
 	avg_income DECIMAL(12,2),
-	gdp BIGINT UNSIGNED
+	gdp BIGINT UNSIGNED,
+	UNIQUE(name, type)
 	);
 
-CREATE TABLE country (
-	country_id INT UNSIGNED NOT NULL PRIMARY KEY REFERENCES location(uid)
-	);
-
-CREATE TABLE state (
-	state_id INT UNSIGNED NOT NULL PRIMARY KEY REFERENCES location(uid),
-	country_id INT UNSIGNED NOT NULL REFERENCES country(country_id));
-
-CREATE TABLE county (
-	county_id INT UNSIGNED NOT NULL PRIMARY KEY REFERENCES location(uid),
-	state_id INT UNSIGNED NOT NULL REFERENCES state(state_id)
-	);
+CREATE TABLE in_location (
+	uid INT UNSIGNED NOT NULL PRIMARY KEY REFERENCES location(uid),
+	enclosing_id INT UNSIGNED NOT NULL REFERENCES location(uid));
 
 CREATE TABLE condition_name (
 	condition_id INT UNSIGNED NOT NULL,
@@ -38,3 +31,16 @@ CREATE TABLE datapoint (
 	race_ethnicity VARCHAR(128) NOT NULL,
 	PRIMARY KEY(condition_id, location_id, year, min_age, max_age, gender, race_ethnicity)
 	);
+
+CREATE TRIGGER in_restriction 
+	BEFORE INSERT OR UPDATE ON in_location
+	REFERENCING NEW TABLE AS new_in 
+	WHEN NOT EXISTS (SELECT * FROM location AS l1, location AS l2, new_in
+		WHERE l1.uid = new_in.uid AND l2.uid = new_in.enclosing_ID
+		AND ((l1.type = 'state' AND l2.type = 'state') 
+			OR (l1.type = 'country' AND l2.type = 'country') 
+			OR (l1.type = 'county' AND l2.type = 'county')
+		 	OR (l1.type = 'country' AND l2.type = 'state') 
+		 	OR (l1.type = 'country' AND l2.type = 'county') 
+		 	OR (l1.type = 'state' AND l2.type = 'county'))
+		);

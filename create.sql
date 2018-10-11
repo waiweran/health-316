@@ -1,5 +1,5 @@
 CREATE TABLE location (
-	uid INT UNSIGNED NOT NULL PRIMARY KEY,
+	uid CHAR(32) NOT NULL PRIMARY KEY,
 	name VARCHAR(256) NOT NULL,
 	type CHAR(7) NOT NULL CHECK(type = 'country' OR type = 'state' OR type = 'county')
 	population BIGINT UNSIGNED,
@@ -19,8 +19,8 @@ CREATE TABLE condition_name (
 	);
 
 CREATE TABLE datapoint (
-	condition_id INT UNSIGNED NOT NULL REFERENCES condition_name(condition_id),
-	location_id INT UNSIGNED NOT NULL REFERENCES location(uid),
+	condition_id CHAR(32) NOT NULL REFERENCES condition_name(condition_id),
+	location_id CHAR(32) NOT NULL REFERENCES location(uid),
 	prevalence BIGINT UNSIGNED,
 	incidence BIGINT UNSIGNED,
 	mortality BIGINT UNSIGNED,

@@ -5,7 +5,6 @@ CREATE TABLE location (
 	population BIGINT UNSIGNED,
 	avg_income DECIMAL(12,2),
 	gdp BIGINT UNSIGNED,
-	UNIQUE(name, type)
 	);
 
 CREATE TABLE in_location (

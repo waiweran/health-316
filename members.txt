@@ -1,0 +1,9 @@
+Health-316 Team Members
+
+As of 10/08
+
+Nathaniel Brooke - Worked on gathering data, developing the E/R design, and initial SQL query
+Gouttham Chandrasekar - Worked on gathering data, developing website interface, and creating sample data
+Harry Liu - Worked on gathering data and developing the website interface
+August Ning - Worked on gathering data, defining the direction of the project, and interfacing with git
+Gaby Rodriguez-Florido - Worked on gathering data, developing the E/R design and transcribed work from project meetings to docs

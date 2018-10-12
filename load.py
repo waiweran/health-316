@@ -14,7 +14,7 @@ for i in range(len(sheet_names)):
     for row_idx in range(1, sheet.nrows):  # Iterate through rows
         curr_row = sheet.row(row_idx)
         write_row = [str(value)[str(value).index(':')+1:(str(value)+'.').index('.')] for value in curr_row]
-        sql_code = 'INSERT INTO ' + name + ' VALUES '+ str(write_row).replace('[', '(').replace(']', ')').replace("'", "").replace('"', "'").replace('\\', '') + ';'
+        sql_code = 'INSERT INTO ' + name + ' VALUES '+ str(write_row).replace('[', '(').replace(']', ')').replace("'", "").replace('"', "'").replace('\\', '').lower() + ';'
         print(sql_code)
         #cur.execute(sql_code)
 

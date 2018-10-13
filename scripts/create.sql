@@ -34,16 +34,16 @@ CREATE TABLE datapoint (
 	race_ethnicity VARCHAR(128) NOT NULL,
 	PRIMARY KEY(condition_id, location_id, year, min_age, max_age, gender, race_ethnicity)
 	);
-/*
+
 CREATE FUNCTION TF_in_restriction() RETURNS TRIGGER AS $$
 BEGIN
-	IF NOT EXISTS (SELECT * FROM location AS l1, location AS l2
+	IF EXISTS (SELECT * FROM location AS l1, location AS l2
 		WHERE l1.uid = NEW.uid AND l2.uid = NEW.enclosing_id
-		AND ((l1.type = 'state' AND l2.type = 'state') 
-			OR (l1.type = 'country' AND l2.type = 'country') 
+		AND ((l1.type = 'state' AND l2.type = 'state')
+			OR (l1.type = 'country' AND l2.type = 'country')
 			OR (l1.type = 'county' AND l2.type = 'county')
-		 	OR (l1.type = 'country' AND l2.type = 'state') 
-		 	OR (l1.type = 'country' AND l2.type = 'county') 
+		 	OR (l1.type = 'country' AND l2.type = 'state')
+		 	OR (l1.type = 'country' AND l2.type = 'county')
 		 	OR (l1.type = 'state' AND l2.type = 'county'))
 		) THEN
 		RAISE EXCEPTION 'Invalid location hierarchy';
@@ -56,5 +56,3 @@ CREATE TRIGGER TG_in_restriction
 	BEFORE INSERT OR UPDATE ON in_location
 	FOR EACH ROW
 	EXECUTE PROCEDURE TF_in_restriction();
-*/
-

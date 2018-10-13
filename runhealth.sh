@@ -1,5 +1,4 @@
-dbname = health
-
+dbname=health
 dropdb $dbname
 createdb $dbname
 psql health -af scripts/create.sql

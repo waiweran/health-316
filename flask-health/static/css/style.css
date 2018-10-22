@@ -52,14 +52,14 @@ a:hover {
 }
 
 .button {
+  font-size: 25px;
+  text-align: center;
   display: inline-block;
-  border-radius: 4px;
+  border-radius: 3px;
   background-color: #f4511e;
   border: solid 2px;
   border-color: black;
   color: #FFFFFF;
-  text-align: center;
-  font-size: 28px;
   padding: 20px;
   width: 500px;
   transition: all 0.5s;
@@ -71,7 +71,7 @@ a:hover {
   cursor: pointer;
   display: inline-block;
   position: relative;
-  transition: 0.5s;
+  transition: 0.6s;
 }
 
 .button span:after {
@@ -80,11 +80,11 @@ a:hover {
   opacity: 0;
   top: 0;
   right: -20px;
-  transition: 0.5s;
+  transition: 0.6s;
 }
 
 .button:hover span {
-  padding-right: 25px;
+  padding-right: 26px;
 }
 
 .button:hover span:after {
@@ -94,8 +94,8 @@ a:hover {
 
 .footer{
 	align-items: center;
-  	justify-content: center;
-  	text-align: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .footer p {

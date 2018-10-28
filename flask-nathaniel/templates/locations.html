@@ -1,18 +1,87 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>LocationData</title>
-    <meta name="description" content="Interactive Visualization for HealthData"/>
-    <meta name="keywords" content="health, map, analytics"/>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-    <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <head>
+    <head>
+        <title>LocationData</title>
+        <meta name="description" content="Interactive Visualization for HealthData"/>
+        <meta name="keywords" content="health, map, analytics"/>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+        <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    </head>
 
-  <body>
-    <div class=nav>
-      <h1><a id=brandname href="/">LocationData</a></h1>
-    </div>
-  <body>
-<html>
+    <body>
+        <!-- Top Menu -->
+        <div class=nav>
+            <h1>
+                <a id=brandname href="/">LocationData
+                    <i class="material-icons md-48">location_on</i>
+                </a>
+            </h1>
+        </div>
+
+        <!-- Side navigation -->
+        <section class="leftnav">
+            <div class="leftnav-content">
+                <p>
+                    <strong>Condition Name</strong>
+                </p>
+                <form>
+                    <label>
+                        <input type="text" name="conditionname"/>
+                    </label>
+                    <label>
+                        <input type="submit" value="Confirm"/>
+                    </label>
+                </form>
+            </div>
+            <br/>
+            <div class="leftnav-content">
+                <p>
+                    <strong>Query By</strong>
+                </p>
+                <form>
+                    <label id="slider">
+                        <h3>GDP</h3>
+                        <input type="range" min="1" max="100" value="50" class="slider" id="GDPrange"/>
+                        <h4>Value: <span id="outputGDP"></span></h4>
+                    </label>
+                    <label id="slider">
+                        <h3>Average Income</h3>
+                        <input type="range" min="1" max="100" value="50" class="slider" id="AIrange"/>
+                        <h4>Value: <span id="outputAI"></span></h4>
+                    </label>
+                    <label id="slider">
+                        <h3>Population</h3>
+                        <input type="range" min="1" max="100" value="50" class="slider" id="Poprange"/>
+                        <h4>Value: <span id="outputPop"></span></h4>
+                    </label>
+                </form>
+            </div>
+        </section>
+    </body>
+
+    <script>
+        var GDPslider = document.getElementById("GDPrange");
+        var AIslider = document.getElementById("AIrange");
+        var Popslider = document.getElementById("Poprange");
+        var outputGDP = document.getElementById("outputGDP");
+        var outputAI = document.getElementById("outputAI");
+        var outputPop = document.getElementById("outputPop");
+        outputGDP.innerHTML = GDPslider.value;
+        outputAI.innerHTML = AIslider.value;
+        outputPop.innerHTML = Popslider.value;
+
+        GDPslider.oninput = function() {
+            outputGDP.innerHTML = this.value;
+        }
+        AIslider.oninput = function() {
+            outputAI.innerHTML = this.value;
+        }
+        Popslider.oninput = function() {
+            outputPop.innerHTML = this.value;
+        }
+        
+    </script>    
+
+</html>

@@ -28,8 +28,8 @@ CREATE TABLE datapoint (
 	incidence BIGINT,
 	mortality BIGINT,
 	year SMALLINT NOT NULL,
-	min_age SMALLINT,
-	max_age SMALLINT,
+	min_age SMALLINT NOT NULL,
+	max_age SMALLINT NOT NULL,
 	gender CHAR(6) NOT NULL CHECK(gender = 'male' OR gender = 'female' OR gender = 'all'),
 	race_ethnicity VARCHAR(128) NOT NULL,
 	PRIMARY KEY(condition_id, location_id, year, min_age, max_age, gender, race_ethnicity)

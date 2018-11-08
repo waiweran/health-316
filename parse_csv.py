@@ -36,7 +36,7 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 			year = int(cells[year_col - 1])
 			conn = psycopg2.connect("dbname=health")
 			c = conn.cursor()
-			c.execute("INSERT INTO datapoint VALUES (%s, %s, NULL, NULL, %s, %s, NULL, NULL, NULL, NULL)", (cond_id, loc_id, mort, year))
+			c.execute("INSERT INTO datapoint VALUES (%s, %s, NULL, NULL, %s, %s, -1, -1, 'all', 'all')", (cond_id, loc_id, mort, year))
 			conn.commit()
 			c.close()
 			conn.close()

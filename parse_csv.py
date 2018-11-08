@@ -66,7 +66,7 @@ def getLocationID(name, type):
 
 def makeUID(existingIDs):
 	i = 0
-	while formatUID(i) in existingIDs:
+	while (formatUID(i),) in existingIDs:
 		i = i + 1
 	return formatUID(i)
 

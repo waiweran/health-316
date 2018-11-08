@@ -109,4 +109,4 @@ def formatUID(idval):
 
 
 loadConditions("mort_data.csv", 3)
-loadDataPoints("mort_data.csv", 4, 'state', 3, 5, 1)
+loadDataPoints(locations=readColumn("mort_data.csv", 4), location_type='state', conditions=readColumn("mort_data.csv", 3), years=readColumn("mort_data.csv", 1), mortalities=readColumn("mort_data.csv", 5))

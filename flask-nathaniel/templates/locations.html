@@ -27,9 +27,9 @@
                 <p>
                     <strong>Condition Name</strong>
                 </p>
-                <form>
+                <form action="{{ url_for('process_data') }}" method="POST">
                     <label>
-                        <input type="text" name="conditionname"/>
+                        <input type="text" name="conditionName"/>
                     </label>
                     <label>
                         <input type="submit" value="Confirm"/>
@@ -44,7 +44,7 @@
                 <form>
                     <label id="slider">
                         <h3>GDP</h3>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="GDPrange"/>
+                        <input type="range" min="1" max="100" value="50" class="slider" id="GDPrange" name="GDPrange"/>
                         <h4>Value: <span id="outputGDP"></span></h4>
                     </label>
                     <label id="slider">
@@ -81,6 +81,10 @@
         }
         Popslider.oninput = function() {
             outputPop.innerHTML = this.value;
+        }
+
+        GDPslider.onmouseup = function () {
+            document.getElementById("GDPrange").submit();
         }
         
     </script>    

@@ -14,9 +14,10 @@ def importConditions(filename, column_num):
 			conn = psycopg2.connect("dbname=health")
 			c = conn.cursor()
 			c.execute("SELECT uid FROM condition")
-			uid = makeUID(c.fetchall())
-			c.execute("INSERT INTO condition VALUES (:id)", dict(id=uid))
-			c.execute("INSERT INTO condition_name VALUES (:id, :cnd)", dict(id=uid, cnd=cond))
+			uidlist = c.fetchall()
+			uid = makeUID(uidlist)
+			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
+			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (cond, uid))
 			conn.commit()
 			c.close()
 			conn.close()
@@ -34,7 +35,7 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 			year = int(cells[year_col - 1])
 			conn = psycopg2.connect("dbname=health")
 			c = conn.cursor()
-			c.execute("INSERT INTO datapoint VALUES (:cid, :lid, NULL, NULL, :mort, :yr, NULL, NULL, NULL, NULL)", dict(cid=cond_id, lid=loc_id, mort=mort, yr=year))
+			c.execute("INSERT INTO datapoint VALUES (%s, %s, NULL, NULL, %s, %s, -1, -1, 'all', 'all')", (cond_id, loc_id, mort, year))
 			conn.commit()
 			c.close()
 			conn.close()
@@ -42,10 +43,9 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 
 
 def getConditionID(name):
-	print("<<" + name + ">>")
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	c.execute("SELECT condition_id FROM condition_name WHERE name = :name", dict(name=name))
+	c.execute("SELECT condition_id FROM condition_name WHERE name = %s", (name,))
 	uid = c.fetchone()
 	conn.commit()
 	c.close()
@@ -55,7 +55,7 @@ def getConditionID(name):
 def getLocationID(name, type):
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	c.execute("SELECT uid FROM location WHERE name = :name AND type = :type", dict(name=name, type=type))
+	c.execute("SELECT uid FROM location WHERE name = %s AND type = %s", (name, type))
 	uid = c.fetchone()
 	conn.commit()
 	c.close()
@@ -64,7 +64,7 @@ def getLocationID(name, type):
 
 def makeUID(existingIDs):
 	i = 0
-	while formatUID(i) in existingIDs:
+	while (formatUID(i),) in existingIDs:
 		i = i + 1
 	return formatUID(i)
 

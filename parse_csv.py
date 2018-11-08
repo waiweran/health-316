@@ -73,5 +73,5 @@ def formatUID(idval):
 	return (4 - idlen)*'0' + str(idval)
 
 
-importConditions("mort_data.csv", 2)
-importDataVals("mort_data.csv", 4, 'state', 2, 5, 1)
+importConditions("mort_data.csv", 3)
+importDataVals("mort_data.csv", 4, 'state', 3, 5, 1)

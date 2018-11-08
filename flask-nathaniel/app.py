@@ -8,11 +8,11 @@ def main_page():
 
 @app.route('/locations')
 def locations_page():
-	return "Location Data Here"
+	return render_template('locations.html')
 
 @app.route('/PMIdata')
 def pmi_page():
-	return "PMI Data Here"
+	return render_template('PMIdata.html')
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', ssl_context='adhoc')
+    app.run(host='0.0.0.0')

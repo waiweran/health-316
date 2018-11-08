@@ -1,0 +1,9 @@
+Health-316 Team Members
+
+As of 11/07
+
+Nathaniel Brooke - Worked on parsing data, setting up the google cloud VM, and figuring out how to run the web server
+Gouttham Chandrasekar - Worked on flask and parsing data
+Harry Liu - Worked on the front end web interface and design and figured out how that connects to the flask
+August Ning - Worked on gathering and parsing data for final data files, got the domain name
+Gaby Rodriguez-Florido - Worked on gathering data, transcribed work to docs, and worked on the backend flask and sql queries

@@ -1,14 +1,7 @@
 import psycopg2
 
-
-def importConditions(filename, column_num):
-	conditions = list()
-	with open(filename, 'r') as file:
-		header = file.readline()
-		for line in file:
-			conditions.append(line.split(',')[column_num - 1])
-
-	for cond in conditions:
+def loadConditions(filename, column_num):
+	for cond in readColumn(filename, column_num):
 		cond_id = getConditionID(cond)
 		if cond_id == None:
 			conn = psycopg2.connect("dbname=health")
@@ -22,25 +15,67 @@ def importConditions(filename, column_num):
 			c.close()
 			conn.close()
 
+def loadDataPoints(locations, location_type, conditions, years, prevalences=[None], incidences=[None], mortalities=[None], min_ages=[-1], max_ages=[-1], genders=['all'], race_ethnicities=['all']):
+	condition_list = list(conditions)
+	location_list = list(locations)
+	prevalence_list = list(prevalences)
+	incidence_list = list(incidences)
+	mortality_list = list(mortalities)
+	year_list = list(years)
+	minage_list = list(min_ages)
+	maxage_list = list(max_ages)
+	gender_list = list(genders)
+	ethn_list = list(race_ethnicities)
 
+	length = max(len(locations), len(conditions), len(years), len(min_ages), len(max_ages), len(genders), len(race_ethnicities))
+	
+	while len(condition_list) < length:
+		condition_list.append(condition_list[-1])
+	while len(location_list) < length:
+		location_list.append(location_list[-1])
+	while len(prevalence_list) < length:
+		prevalence_list.append(prevalence_list[-1])
+	while len(incidence_list) < length:
+		incidence_list.append(incidence_list[-1])
+	while len(mortality_list) < length:
+		mortality_list.append(mortality_list[-1])
+	while len(year_list) < length:
+		year_list.append(year_list[-1])
+	while len(minage_list) < length:
+		minage_list.append(minage_list[-1])
+	while len(maxage_list) < length:
+		maxage_list.append(maxage_list[-1])
+	while len(gender_list) < length:
+		gender_list.append(gender_list[-1])
+	while len(ethn_list) < length:
+		ethn_list.append(ethn_list[-1])
 
-def importDataVals(filename, location_col, location_type, condition_col, mortality_col, year_col):
+	for i in range(0, length):	
+		cond_id = getConditionID(condition_list[i])
+		loc_id = getLocationID(location_list[i], location_type)
+		prev = prevalence_list[i]
+		inc = incidence_list[i]
+		mort = mortality_list[i]
+		year = year_list[i]
+		minage = minage_list[i]
+		maxage = maxage_list[i]
+		gen = gender_list[i]
+		ethn = ethn_list[i]
+
+		conn = psycopg2.connect("dbname=health")
+		c = conn.cursor()
+		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, prev, inc, mort, year, minage, maxage, gen, ethn))
+		conn.commit()
+		c.close()
+		conn.close()
+
+def readColumn(filename, column_num):
+	cells = list()
 	with open(filename, 'r') as file:
 		header = file.readline()
-		for line in file:
-			cells = line.split(',')
-			loc_id = getLocationID(cells[location_col - 1], location_type)
-			cond_id = getConditionID(cells[condition_col - 1])
-			mort = int(cells[mortality_col - 1])
-			year = int(cells[year_col - 1])
-			conn = psycopg2.connect("dbname=health")
-			c = conn.cursor()
-			c.execute("INSERT INTO datapoint VALUES (%s, %s, NULL, NULL, %s, %s, -1, -1, 'all', 'all')", (cond_id, loc_id, mort, year))
-			conn.commit()
-			c.close()
-			conn.close()
-
-
+		for row in file:
+			 cells.append(row.split(',')[column_num - 1])
+	return cells
 
 def getConditionID(name):
 	conn = psycopg2.connect("dbname=health")
@@ -73,5 +108,5 @@ def formatUID(idval):
 	return (4 - idlen)*'0' + str(idval)
 
 
-importConditions("mort_data.csv", 3)
-importDataVals("mort_data.csv", 4, 'state', 3, 5, 1)
+loadConditions("mort_data.csv", 3)
+loadDataPoints("mort_data.csv", 4, 'state', 3, 5, 1)

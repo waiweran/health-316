@@ -31,6 +31,7 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 		for line in file:
 			cells = line.split(',')
 			loc_id = getLocationID(cells[location_col - 1], location_type)
+			print(cells[location_col - 1] + " ----> " + loc_id)
 			cond_id = getConditionID(cells[condition_col - 1])
 			mort = int(cells[mortality_col - 1])
 			year = int(cells[year_col - 1])

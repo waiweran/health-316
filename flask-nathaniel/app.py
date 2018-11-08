@@ -19,7 +19,8 @@ def process_data():
 	
 	if request.method == 'POST': #this block is only entered when the form is submitted
 		conditionName = request.form.get('conditionName')
-		return '<h1>The condition name you entered is: {}'.format(conditionName)
+		GDPrange = request.form.get('GDPrange')
+		return '<h1>The condition name you entered is: **{}** Your selected GDP value is **{}**'.format(conditionName,GDPrange)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

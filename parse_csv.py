@@ -15,7 +15,6 @@ def importConditions(filename, column_num):
 			c = conn.cursor()
 			c.execute("SELECT uid FROM condition")
 			uidlist = c.fetchall()
-			print(uidlist)
 			uid = makeUID(uidlist)
 			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
 			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (cond, uid))
@@ -31,7 +30,6 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 		for line in file:
 			cells = line.split(',')
 			loc_id = getLocationID(cells[location_col - 1], location_type)
-			print(str(cells[location_col - 1]) + " ----> " + str(loc_id))
 			cond_id = getConditionID(cells[condition_col - 1])
 			mort = int(cells[mortality_col - 1])
 			year = int(cells[year_col - 1])

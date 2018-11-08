@@ -23,41 +23,45 @@
 
         <!-- Side navigation -->
         <section class="leftnav">
+
             <div class="leftnav-content">
-                <p>
-                    <strong>Condition Name</strong>
-                </p>
+
                 <form action="{{ url_for('process_data') }}" method="POST">
-                    <label>
+                    <!–– Condition Text -->
+                    <p>
+                        <strong>Condition Name</strong>
+                    </p>
+                    <label id="text">
                         <input type="text" name="conditionName"/>
                     </label>
-                    <label>
-                        <input type="submit" value="Confirm"/>
-                    </label>
-                </form>
-            </div>
-            <br/>
-            <div class="leftnav-content">
-                <p>
-                    <strong>Query By</strong>
-                </p>
-                <form>
+
+                    <!–– Sliders for Query -->
+                    <p>
+                        <strong>Query By</strong>
+                    </p>
+
                     <label id="slider">
                         <h3>GDP</h3>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="GDPrange" name="GDPrange"/>
+                        <input type="range" min="650" max="125000" value="17300" class="slider" id="GDPrange" name="GDPrange"/>
                         <h4>Value: <span id="outputGDP"></span></h4>
                     </label>
                     <label id="slider">
                         <h3>Average Income</h3>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="AIrange"/>
+                        <input type="range" min="1" max="64000" value="9700" class="slider" id="AIrange"/>
                         <h4>Value: <span id="outputAI"></span></h4>
                     </label>
                     <label id="slider">
-                        <h3>Population</h3>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="Poprange"/>
+                        <h3>Population (Millions)</h3>
+                        <input type="range" min="0.50" max="1400" value="50" class="slider" id="Poprange"/>
                         <h4>Value: <span id="outputPop"></span></h4>
                     </label>
+
+                    <!–– Submission -->
+                    <label>
+                        <input type="submit" value="Confirm"/>
+                    </label>        
                 </form>
+
             </div>
         </section>
     </body>
@@ -82,11 +86,6 @@
         Popslider.oninput = function() {
             outputPop.innerHTML = this.value;
         }
-
-        GDPslider.onmouseup = function () {
-            document.getElementById("GDPrange").submit();
-        }
-        
     </script>    
 
 </html>

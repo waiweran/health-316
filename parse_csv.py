@@ -1,4 +1,4 @@
-#import psycopg2
+import psycopg2
 
 
 def importConditions(filename, column_num):
@@ -28,10 +28,10 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 		header = file.readline()
 		for line in file:
 			cells = line.split(',')
-			loc_id = getLocationID(cells[location_col], location_type)
-			cond_id = getConditionID(cells[condition_col])
-			mort = int(cells[mortality_col])
-			year = int(cells[year_col])
+			loc_id = getLocationID(cells[location_col - 1], location_type)
+			cond_id = getConditionID(cells[condition_col - 1])
+			mort = int(cells[mortality_col - 1])
+			year = int(cells[year_col - 1])
 			conn = psycopg2.connect("dbname=health")
 			c = conn.cursor()
 			c.execute("INSERT INTO datapoint VALUES (%s, %s, NULL, NULL, %s, %s, NULL, NULL, NULL, NULL)", (cond_id, loc_id, mort, year))
@@ -70,3 +70,7 @@ def makeUID(existingIDs):
 def formatUID(idval):
 	idlen = len(str(idval))
 	return (4 - idlen)*'0' + str(idval)
+
+
+importConditions("mort_data.csv", 2)
+importDataVals("mort_data.csv", 4, 'state', 2, 5, 1)

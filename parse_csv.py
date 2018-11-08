@@ -45,7 +45,7 @@ def getConditionID(name):
 	print("<<" + name + ">>")
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	c.execute("SELECT condition_id FROM condition_name WHERE name = " + name)
+	c.execute("SELECT condition_id FROM condition_name WHERE name = '" + name + "'")
 	uid = c.fetchone()
 	conn.commit()
 	c.close()

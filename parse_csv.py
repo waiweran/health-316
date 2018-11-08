@@ -24,7 +24,7 @@ def importConditions(filename, column_num):
 
 
 
-def importDataVals(filename, location_col, location_type, condition_col, mortality_col, year_col)
+def importDataVals(filename, location_col, location_type, condition_col, mortality_col, year_col):
 	with open(filename, 'r') as file:
 		header = file.readline()
 		for line in file:

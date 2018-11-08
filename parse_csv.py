@@ -48,7 +48,7 @@ def getConditionID(name):
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
 	c.execute("SELECT condition_id FROM condition_name WHERE name = %s", (name,))
-	uid = c.fetchone()[0]
+	uid = c.fetchone()
 	conn.commit()
 	c.close()
 	conn.close()
@@ -58,7 +58,7 @@ def getLocationID(name, type):
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
 	c.execute("SELECT uid FROM location WHERE name = %s AND type = %s", (name, type))
-	uid = c.fetchone()[0]
+	uid = c.fetchone()
 	conn.commit()
 	c.close()
 	conn.close()

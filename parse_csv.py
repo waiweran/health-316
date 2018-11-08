@@ -9,7 +9,6 @@ def importConditions(filename, column_num):
 			conditions.append(line.split(',')[column_num - 1])
 
 	for cond in conditions:
-		print("<<" + cond + ">>")
 		cond_id = getConditionID(cond)
 		if cond_id == None:
 			conn = psycopg2.connect("dbname=health")
@@ -43,6 +42,7 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 
 
 def getConditionID(name):
+	print("<<" + name + ">>")
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
 	c.execute("SELECT condition_id FROM condition_name WHERE name = %s", (name))

@@ -1,4 +1,4 @@
-import SQLAlchemy
+import psycopg2
 
 
 def importConditions(filename, column_num):
@@ -11,12 +11,12 @@ def importConditions(filename, column_num):
 	for cond in conditions:
 		cond_id = getConditionID(cond)
 		if cond_id == None:
-			conn = SQLAlchemy.connect("dbname=health")
+			conn = psycopg2.connect("dbname=health")
 			c = conn.cursor()
 			c.execute("SELECT uid FROM condition")
 			uid = makeUID(c.fetchall())
-			c.execute("INSERT INTO condition VALUES (:id)", dict(id=uid))
-			c.execute("INSERT INTO condition_name VALUES (:id, :cnd)", dict(id=uid, cnd=cond))
+			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
+			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (uid, cond))
 			conn.commit()
 			c.close()
 			conn.close()
@@ -32,9 +32,9 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 			cond_id = getConditionID(cells[condition_col - 1])
 			mort = int(cells[mortality_col - 1])
 			year = int(cells[year_col - 1])
-			conn = SQLAlchemy.connect("dbname=health")
+			conn = psycopg2.connect("dbname=health")
 			c = conn.cursor()
-			c.execute("INSERT INTO datapoint VALUES (:cid, :lid, NULL, NULL, :mort, :yr, NULL, NULL, NULL, NULL)", dict(cid=cond_id, lid=loc_id, mort=mort, yr=year))
+			c.execute("INSERT INTO datapoint VALUES (%s, %s, NULL, NULL, %s, %s, NULL, NULL, NULL, NULL)", (cond_id, loc_id, mort, year))
 			conn.commit()
 			c.close()
 			conn.close()
@@ -43,9 +43,9 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 
 def getConditionID(name):
 	print("<<" + name + ">>")
-	conn = SQLAlchemy.connect("dbname=health")
+	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	c.execute("SELECT condition_id FROM condition_name WHERE name = :name", dict(name=name))
+	c.execute("SELECT condition_id FROM condition_name WHERE name = %s", (name,))
 	uid = c.fetchone()
 	conn.commit()
 	c.close()
@@ -53,9 +53,9 @@ def getConditionID(name):
 	return uid
 
 def getLocationID(name, type):
-	conn = SQLAlchemy.connect("dbname=health")
+	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	c.execute("SELECT uid FROM location WHERE name = :name AND type = :type", dict(name=name, type=type))
+	c.execute("SELECT uid FROM location WHERE name = %s AND type = %s", (name, type))
 	uid = c.fetchone()
 	conn.commit()
 	c.close()

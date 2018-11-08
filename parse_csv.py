@@ -9,7 +9,7 @@ def importConditions(filename, column_num):
 			conditions.append(line.split(',')[column_num - 1])
 
 	for cond in conditions:
-		print(cond)
+		print("<<" + cond + ">>")
 		cond_id = getConditionID(cond)
 		if cond_id == None:
 			conn = psycopg2.connect("dbname=health")

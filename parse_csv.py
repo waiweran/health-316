@@ -1,4 +1,4 @@
-import psycopg2
+import SQLAlchemy
 
 
 def importConditions(filename, column_num):
@@ -11,7 +11,7 @@ def importConditions(filename, column_num):
 	for cond in conditions:
 		cond_id = getConditionID(cond)
 		if cond_id == None:
-			conn = psycopg2.connect("dbname=health")
+			conn = SQLAlchemy.connect("dbname=health")
 			c = conn.cursor()
 			c.execute("SELECT uid FROM condition")
 			uid = makeUID(c.fetchall())
@@ -32,7 +32,7 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 			cond_id = getConditionID(cells[condition_col - 1])
 			mort = int(cells[mortality_col - 1])
 			year = int(cells[year_col - 1])
-			conn = psycopg2.connect("dbname=health")
+			conn = SQLAlchemy.connect("dbname=health")
 			c = conn.cursor()
 			c.execute("INSERT INTO datapoint VALUES (:cid, :lid, NULL, NULL, :mort, :yr, NULL, NULL, NULL, NULL)", dict(cid=cond_id, lid=loc_id, mort=mort, yr=year))
 			conn.commit()
@@ -43,7 +43,7 @@ def importDataVals(filename, location_col, location_type, condition_col, mortali
 
 def getConditionID(name):
 	print("<<" + name + ">>")
-	conn = psycopg2.connect("dbname=health")
+	conn = SQLAlchemy.connect("dbname=health")
 	c = conn.cursor()
 	c.execute("SELECT condition_id FROM condition_name WHERE name = :name", dict(name=name))
 	uid = c.fetchone()
@@ -53,7 +53,7 @@ def getConditionID(name):
 	return uid
 
 def getLocationID(name, type):
-	conn = psycopg2.connect("dbname=health")
+	conn = SQLAlchemy.connect("dbname=health")
 	c = conn.cursor()
 	c.execute("SELECT uid FROM location WHERE name = :name AND type = :type", dict(name=name, type=type))
 	uid = c.fetchone()

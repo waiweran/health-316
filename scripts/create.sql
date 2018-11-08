@@ -13,23 +13,23 @@ CREATE TABLE in_location (
 	);
 
 CREATE TABLE condition (
-	uid CHAR(32) NOT NULL PRIMARY KEY
+	uid CHAR(4) NOT NULL PRIMARY KEY
 	);
 
 CREATE TABLE condition_name (
 	name VARCHAR(256) NOT NULL PRIMARY KEY,
-	condition_id CHAR(32) NOT NULL REFERENCES condition(uid)
+	condition_id CHAR(4) NOT NULL REFERENCES condition(uid)
 	);
 
 CREATE TABLE datapoint (
-	condition_id CHAR(32) NOT NULL REFERENCES condition(uid),
+	condition_id CHAR(4) NOT NULL REFERENCES condition(uid),
 	location_id CHAR(4) NOT NULL REFERENCES location(uid),
 	prevalence BIGINT,
 	incidence BIGINT,
 	mortality BIGINT,
 	year SMALLINT NOT NULL,
-	min_age SMALLINT NOT NULL,
-	max_age SMALLINT NOT NULL,
+	min_age SMALLINT,
+	max_age SMALLINT,
 	gender CHAR(6) NOT NULL CHECK(gender = 'male' OR gender = 'female' OR gender = 'all'),
 	race_ethnicity VARCHAR(128) NOT NULL,
 	PRIMARY KEY(condition_id, location_id, year, min_age, max_age, gender, race_ethnicity)

@@ -10,6 +10,7 @@ def importConditions(filename, column_num):
 
 	for cond in conditions:
 		cond_id = getConditionID(cond)
+		print(cond)
 		if cond_id == None:
 			conn = psycopg2.connect("dbname=health")
 			c = conn.cursor()

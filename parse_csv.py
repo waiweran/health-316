@@ -16,7 +16,7 @@ def importConditions(filename, column_num):
 			c.execute("SELECT uid FROM condition")
 			uid = makeUID(c.fetchall())
 			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
-			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (uid, cond))
+			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (cond, uid))
 			conn.commit()
 			c.close()
 			conn.close()

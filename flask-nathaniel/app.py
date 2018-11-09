@@ -27,13 +27,15 @@ def process_data():
     GDPrange = request.form.get('GDPrange')
     AIrange = request.form.get('AIrange')
     Poprange = request.form.get('Poprange')
+
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
-    c.execute("SELECT condition_id FROM condition_name WHERE condition_name = %s", (conditionName,))
+    c.execute("SELECT condition_id FROM condition_name WHERE condition_name.name = %s", (conditionName,))
     uid = c.fetchone()[0]
     conn.commit()
     c.close()
     conn.close()
+
     return '''<h1> The condition name you entered is: **{}**. Your selected GDP value is **{}**. Your selected AI value is **{}**. Your selected Pop value is **{}**.  Queries suggest that the condition has backend database unique id **{}**'''.format(conditionName, GDPrange, AIrange, Poprange, uid)
 
 

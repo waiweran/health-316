@@ -29,5 +29,6 @@ WHERE dp.year = 2015 AND dp.race_ethnicity = 'black' AND name = 'HIV'
 ) AS foo;
  count 
 -------
-(0 rows)
+    51
+(1 row)
 

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import psycopg2
 
 app = Flask(__name__)
 
@@ -26,7 +27,14 @@ def process_data():
     GDPrange = request.form.get('GDPrange')
     AIrange = request.form.get('AIrange')
     Poprange = request.form.get('Poprange')
-    return '''<h1> The condition name you entered is: **{}**. Your selected GDP value is **{}**. Your selected AI value is **{}**. Your selected Pop value is **{}**'''.format(conditionName, GDPrange, AIrange, Poprange)
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute("SELECT condition_id FROM condition_name WHERE condition_name = %s", (conditionName,))
+    uid = c.fetchone()[0]
+    conn.commit()
+    c.close()
+    conn.close()
+    return '''<h1> The condition name you entered is: **{}**. Your selected GDP value is **{}**. Your selected AI value is **{}**. Your selected Pop value is **{}**.  Queries suggest that the condition has backend database unique id **{}**'''.format(conditionName, GDPrange, AIrange, Poprange, uid)
 
 
 if __name__ == "__main__":

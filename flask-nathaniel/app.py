@@ -30,7 +30,7 @@ def process_data():
 
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
-    c.execute("SELECT mortality FROM condition_name, datapoint, location WHERE condition_name.name = %s AND condition_name.condition_id = datapoint.condition_id AND datapoint.location_id = location.uid AND location.name = 'United States' AND datapoint.year = 2016", (conditionName,))
+    c.execute("SELECT mortality FROM condition_name, datapoint, location WHERE condition_name.name = %s AND condition_name.condition_id = datapoint.condition_id AND datapoint.location_id = location.uid AND location.name = 'North Carolina' AND datapoint.year = 2016", (conditionName,))
     mortality = c.fetchone()[0]
     conn.commit()
     c.close()

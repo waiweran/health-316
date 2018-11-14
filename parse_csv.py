@@ -1,7 +1,7 @@
 import psycopg2
 
 def loadConditions(filename, column_num):
-	for cond in readColumn(filename, column_num):
+	for name, cond in readColumn(filename, {"conditions": column_num}):
 		cond_id = getConditionID(cond)
 		if cond_id == None:
 			conn = psycopg2.connect("dbname=health")
@@ -29,38 +29,37 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 
 	length = max(len(locations), len(conditions), len(years), len(min_ages), len(max_ages), len(genders), len(race_ethnicities))
 	
-	while len(condition_list) < length:
-		condition_list.append(condition_list[-1])
-	while len(location_list) < length:
-		location_list.append(location_list[-1])
-	while len(prevalence_list) < length:
-		prevalence_list.append(prevalence_list[-1])
-	while len(incidence_list) < length:
-		incidence_list.append(incidence_list[-1])
-	while len(mortality_list) < length:
-		mortality_list.append(mortality_list[-1])
-	while len(year_list) < length:
-		year_list.append(year_list[-1])
-	while len(minage_list) < length:
-		minage_list.append(minage_list[-1])
-	while len(maxage_list) < length:
-		maxage_list.append(maxage_list[-1])
-	while len(gender_list) < length:
-		gender_list.append(gender_list[-1])
-	while len(ethn_list) < length:
-		ethn_list.append(ethn_list[-1])
-
 	for i in range(0, length):	
-		cond_id = getConditionID(condition_list[i])
-		loc_id = getLocationID(location_list[i], location_type)
-		prev = prevalence_list[i]
-		inc = incidence_list[i]
-		mort = mortality_list[i]
-		year = year_list[i]
-		minage = minage_list[i]
-		maxage = maxage_list[i]
-		gen = gender_list[i]
-		ethn = ethn_list[i]
+		cond_id = getConditionID(condition_list[-1])
+		if i < len(condition_list):
+			cond_id = getConditionID(condition_list[i])
+		loc_id = getLocationID(location_list[-1], location_type)
+		if i < len(location_list):
+			loc_id = getLocationID(location_list[i], location_type)
+		prev = prevalence_list[-1]
+		if i < len(prevalence_list):
+			prev = prevalence_list[i]
+		inc = incidence_list[-1]
+		if i < len(incidence_list):
+			inc = incidence_list[i]
+		mort = mortality_list[-1]
+		if i < len(mortality_list):
+			mort = mortality_list[i]
+		year = year_list[-1]
+		if i < len(year_list):
+			year = year_list[i]
+		minage = minage_list[-1]
+		if i < len(minage_list):
+			minage = minage_list[i]
+		maxage = maxage_list[-1]
+		if i < len(maxage_list):
+			maxage = maxage_list[i]
+		gen = gender_list[-1]
+		if i < len(gender_list):
+			gen = gender_list[i]
+		ethn = ethn_list[-1]
+		if i < len(ethn_list):
+			ethn = ethn_list[i]
 
 		conn = psycopg2.connect("dbname=health")
 		c = conn.cursor()
@@ -69,13 +68,17 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 		c.close()
 		conn.close()
 
-def readColumn(filename, column_num):
-	cells = list()
+def readColumns(filename, column_nums):
+	output = dict()
+	for val in column_nums:
+		output.append(list())
 	with open(filename, 'r') as file:
 		header = file.readline()
 		for row in file:
-			 cells.append(row.split(',')[column_num - 1])
-	return cells
+			cells = row.split(',')
+			for name, num in column_nums:
+				output[name] = cells[num]
+	return output
 
 def getConditionID(name):
 	conn = psycopg2.connect("dbname=health")
@@ -109,4 +112,5 @@ def formatUID(idval):
 
 
 loadConditions("mort_data.csv", 3)
-loadDataPoints(locations=readColumn("mort_data.csv", 4), location_type='state', conditions=readColumn("mort_data.csv", 3), years=readColumn("mort_data.csv", 1), mortalities=readColumn("mort_data.csv", 5))
+cols = readColumns("mort_data.csv", {"locations": 4, "conditions": 3, "years": 1, "mortalities": 5})
+loadDataPoints(locations=cols["locations"], location_type='state', conditions=cols["conditions"], years=cols["years"], mortalities=cols["mortalities"])

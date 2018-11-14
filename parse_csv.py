@@ -1,29 +1,38 @@
 import psycopg2
+import time
 
 def loadConditions(filename, column_num):
-	print("Loading Conditions\n")
+	print("Loading Conditions:")
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
 	conditions = set(readColumns(filename, {"conditions": column_num})["conditions"])
 	prevProgress = -1
-	for i in range(len(conditions)):
-		cond_id = getConditionID(conditions[i])
+	index = 0
+	startTime = time.time()
+	for cond in conditions:
+		cond_id = getConditionID(cond)
 		if cond_id == None:
 			c.execute("SELECT uid FROM condition")
 			uidlist = c.fetchall()
 			uid = makeUID(uidlist)
 			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
-			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (conditions[i], uid))
+			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (cond, uid))
 			conn.commit()
-		progress = int(i*100/len(conditions))
+		progress = round(index*100/len(conditions), 1)
+		barsize = int(progress/2)
+		timeLeft = int((time.time() - startTime)*(len(conditions)/(index+1) - 1))
+		minsLeft = timeLeft // 60
+		secsLeft = timeLeft % 60
 		if(progress > prevProgress):
-			print("Progress: |" + "█"*(progress/2) + "-"*(50-progress/2) + "| " + str(progress) + "%", end="\r")
+			print("Progress: |" + "█"*(barsize) + "-"*(50-barsize) + "| " + str(progress) + "% Time Remaining: " + str(minsLeft) + " minutes " + str(secsLeft) + " seconds          ", end="\r")
 			prevProgress = progress
+		index = index + 1
+	print("Progress: |" + "█"*50 + "| 100% Time Remaining: 0 minutes 0 seconds                  ")
 	c.close()
 	conn.close()
 
 def loadDataPoints(locations, location_type, conditions, years, prevalences=[None], incidences=[None], mortalities=[None], min_ages=[-1], max_ages=[-1], genders=['all'], race_ethnicities=['all']):
-	print("Loading Datapoints:\n")
+	print("Loading Datapoints:")
 
 	condition_list = list(conditions)
 	location_list = list(locations)
@@ -42,6 +51,7 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 	c = conn.cursor()
 
 	prevProgress = -1
+	startTime = time.time()
 
 	for i in range(0, length):	
 		cond_id = getConditionID(condition_list[-1])
@@ -77,11 +87,16 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 
 		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, prev, inc, mort, year, minage, maxage, gen, ethn))
 
-		progress = int(i*100/len(conditions))
+		progress = round(i*100/len(conditions), 1)
+		barsize = int(progress/2)
+		timeLeft = int((time.time() - startTime)*(len(conditions)/(i+1) - 1))
+		minsLeft = timeLeft // 60
+		secsLeft = timeLeft % 60
 		if(progress > prevProgress):
-			print("Progress: |" + "█"*(progress/2) + "-"*(50-progress/2) + "| " + str(progress) + "%", end="\r")
+			print("Progress: |" + "█"*(barsize) + "-"*(50-barsize) + "| " + str(progress) + "% Time Remaining: " + str(minsLeft) + " minutes " + str(secsLeft) + " seconds          ", end="\r")
 			prevProgress = progress
 
+	print("Progress: |" + "█"*50 + "| 100% Time Remaining: 0 minutes 0 seconds                  ")
 	conn.commit()
 	c.close()
 	conn.close()

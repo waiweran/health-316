@@ -1,3 +1,4 @@
+cd ..
 dropdb health
 createdb health
 psql health -af scripts/create.sql

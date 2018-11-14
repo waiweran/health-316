@@ -1,10 +1,11 @@
 import psycopg2
 
 def loadConditions(filename, column_num):
+	print("Loading Conditions\n")
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	conditions = readColumns(filename, {"conditions": column_num})["conditions"]
-	prevProgress = 0
+	conditions = set(readColumns(filename, {"conditions": column_num})["conditions"])
+	prevProgress = -1
 	for i in range(len(conditions)):
 		cond_id = getConditionID(conditions[i])
 		if cond_id == None:
@@ -14,14 +15,16 @@ def loadConditions(filename, column_num):
 			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
 			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (conditions[i], uid))
 			conn.commit()
-		progress = int(i*30/len(conditions))
+		progress = int(i*100/len(conditions))
 		if(progress > prevProgress):
-			print("Progress: |" + "*"*progress + "-"*(30-progress) + "|", end="\r")
+			print("Progress: |" + "█"*(progress/2) + "-"*(50-progress/2) + "| " + str(progress) + "%", end="\r")
 			prevProgress = progress
 	c.close()
 	conn.close()
 
 def loadDataPoints(locations, location_type, conditions, years, prevalences=[None], incidences=[None], mortalities=[None], min_ages=[-1], max_ages=[-1], genders=['all'], race_ethnicities=['all']):
+	print("Loading Datapoints:\n")
+
 	condition_list = list(conditions)
 	location_list = list(locations)
 	prevalence_list = list(prevalences)
@@ -37,6 +40,8 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 	
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
+
+	prevProgress = -1
 
 	for i in range(0, length):	
 		cond_id = getConditionID(condition_list[-1])
@@ -71,6 +76,11 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 			ethn = ethn_list[i]
 
 		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, prev, inc, mort, year, minage, maxage, gen, ethn))
+
+		progress = int(i*100/len(conditions))
+		if(progress > prevProgress):
+			print("Progress: |" + "█"*(progress/2) + "-"*(50-progress/2) + "| " + str(progress) + "%", end="\r")
+			prevProgress = progress
 
 	conn.commit()
 	c.close()

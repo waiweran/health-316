@@ -1,19 +1,19 @@
 import psycopg2
 
 def loadConditions(filename, column_num):
+	conn = psycopg2.connect("dbname=health")
+	c = conn.cursor()
 	for name, cond in readColumn(filename, {"conditions": column_num}):
 		cond_id = getConditionID(cond)
 		if cond_id == None:
-			conn = psycopg2.connect("dbname=health")
-			c = conn.cursor()
 			c.execute("SELECT uid FROM condition")
 			uidlist = c.fetchall()
 			uid = makeUID(uidlist)
 			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
 			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (cond, uid))
 			conn.commit()
-			c.close()
-			conn.close()
+	c.close()
+	conn.close()
 
 def loadDataPoints(locations, location_type, conditions, years, prevalences=[None], incidences=[None], mortalities=[None], min_ages=[-1], max_ages=[-1], genders=['all'], race_ethnicities=['all']):
 	condition_list = list(conditions)
@@ -29,6 +29,9 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 
 	length = max(len(locations), len(conditions), len(years), len(min_ages), len(max_ages), len(genders), len(race_ethnicities))
 	
+	conn = psycopg2.connect("dbname=health")
+	c = conn.cursor()
+
 	for i in range(0, length):	
 		cond_id = getConditionID(condition_list[-1])
 		if i < len(condition_list):
@@ -61,12 +64,11 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 		if i < len(ethn_list):
 			ethn = ethn_list[i]
 
-		conn = psycopg2.connect("dbname=health")
-		c = conn.cursor()
 		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, prev, inc, mort, year, minage, maxage, gen, ethn))
-		conn.commit()
-		c.close()
-		conn.close()
+
+	conn.commit()
+	c.close()
+	conn.close()
 
 def readColumns(filename, column_nums):
 	output = dict()

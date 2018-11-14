@@ -79,7 +79,7 @@ def readColumns(filename, column_nums):
 		for row in file:
 			cells = row.split(',')
 			for name, num in column_nums.items():
-				output[name].append(cells[num])
+				output[name].append(cells[num - 1])
 	return output
 
 def getConditionID(name):

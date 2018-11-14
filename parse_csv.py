@@ -3,15 +3,21 @@ import psycopg2
 def loadConditions(filename, column_num):
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	for cond in readColumns(filename, {"conditions": column_num})["conditions"]:
-		cond_id = getConditionID(cond)
+	conditions = readColumns(filename, {"conditions": column_num})["conditions"]
+	prevProgress = 0
+	for i in range(len(conditions)):
+		cond_id = getConditionID(conditions[i])
 		if cond_id == None:
 			c.execute("SELECT uid FROM condition")
 			uidlist = c.fetchall()
 			uid = makeUID(uidlist)
 			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
-			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (cond, uid))
+			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (conditions[i], uid))
 			conn.commit()
+		progress = int(i*30/len(conditions))
+		if(progress > prevProgress):
+			print("Progress: |" + "*"*progress + "-"*(30-progress) + "|", end="\r")
+			prevProgress = progress
 	c.close()
 	conn.close()
 

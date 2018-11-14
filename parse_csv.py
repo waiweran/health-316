@@ -1,46 +1,117 @@
 import psycopg2
+import time
 
-
-def importConditions(filename, column_num):
-	conditions = list()
-	with open(filename, 'r') as file:
-		header = file.readline()
-		for line in file:
-			conditions.append(line.split(',')[column_num - 1])
-
+def loadConditions(filename, column_num):
+	print("Loading Conditions:")
+	conn = psycopg2.connect("dbname=health")
+	c = conn.cursor()
+	conditions = set(readColumns(filename, {"conditions": column_num})["conditions"])
+	prevProgress = -1
+	index = 0
+	startTime = time.time()
 	for cond in conditions:
 		cond_id = getConditionID(cond)
 		if cond_id == None:
-			conn = psycopg2.connect("dbname=health")
-			c = conn.cursor()
 			c.execute("SELECT uid FROM condition")
 			uidlist = c.fetchall()
 			uid = makeUID(uidlist)
 			c.execute("INSERT INTO condition VALUES (%s)", (uid,))
 			c.execute("INSERT INTO condition_name VALUES (%s, %s)", (cond, uid))
 			conn.commit()
-			c.close()
-			conn.close()
+		progress = round(index*100/len(conditions), 1)
+		barsize = int(progress/2)
+		timeLeft = int((time.time() - startTime)*(len(conditions)/(index+1) - 1))
+		minsLeft = timeLeft // 60
+		secsLeft = timeLeft % 60
+		if(progress > prevProgress):
+			print("Progress: |" + "█"*(barsize) + "-"*(50-barsize) + "| " + str(progress) + "% Time Remaining: " + str(minsLeft) + " minutes " + str(secsLeft) + " seconds          ", end="\r")
+			prevProgress = progress
+		index = index + 1
+	print("Progress: |" + "█"*50 + "| 100% Time Remaining: 0 minutes 0 seconds                  ")
+	c.close()
+	conn.close()
 
+def loadDataPoints(locations, location_type, conditions, years, prevalences=[None], incidences=[None], mortalities=[None], min_ages=[-1], max_ages=[-1], genders=['all'], race_ethnicities=['all']):
+	print("Loading Datapoints:")
 
+	condition_list = list(conditions)
+	location_list = list(locations)
+	prevalence_list = list(prevalences)
+	incidence_list = list(incidences)
+	mortality_list = list(mortalities)
+	year_list = list(years)
+	minage_list = list(min_ages)
+	maxage_list = list(max_ages)
+	gender_list = list(genders)
+	ethn_list = list(race_ethnicities)
 
-def importDataVals(filename, location_col, location_type, condition_col, mortality_col, year_col):
+	length = max(len(locations), len(conditions), len(years), len(min_ages), len(max_ages), len(genders), len(race_ethnicities))
+	
+	conn = psycopg2.connect("dbname=health")
+	c = conn.cursor()
+
+	prevProgress = -1
+	startTime = time.time()
+
+	for i in range(0, length):	
+		cond_id = getConditionID(condition_list[-1])
+		if i < len(condition_list):
+			cond_id = getConditionID(condition_list[i])
+		loc_id = getLocationID(location_list[-1], location_type)
+		if i < len(location_list):
+			loc_id = getLocationID(location_list[i], location_type)
+		prev = prevalence_list[-1]
+		if i < len(prevalence_list):
+			prev = prevalence_list[i]
+		inc = incidence_list[-1]
+		if i < len(incidence_list):
+			inc = incidence_list[i]
+		mort = mortality_list[-1]
+		if i < len(mortality_list):
+			mort = mortality_list[i]
+		year = year_list[-1]
+		if i < len(year_list):
+			year = year_list[i]
+		minage = minage_list[-1]
+		if i < len(minage_list):
+			minage = minage_list[i]
+		maxage = maxage_list[-1]
+		if i < len(maxage_list):
+			maxage = maxage_list[i]
+		gen = gender_list[-1]
+		if i < len(gender_list):
+			gen = gender_list[i]
+		ethn = ethn_list[-1]
+		if i < len(ethn_list):
+			ethn = ethn_list[i]
+
+		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, prev, inc, mort, year, minage, maxage, gen, ethn))
+
+		progress = round(i*100/len(conditions), 1)
+		barsize = int(progress/2)
+		timeLeft = int((time.time() - startTime)*(len(conditions)/(i+1) - 1))
+		minsLeft = timeLeft // 60
+		secsLeft = timeLeft % 60
+		if(progress > prevProgress):
+			print("Progress: |" + "█"*(barsize) + "-"*(50-barsize) + "| " + str(progress) + "% Time Remaining: " + str(minsLeft) + " minutes " + str(secsLeft) + " seconds          ", end="\r")
+			prevProgress = progress
+
+	print("Progress: |" + "█"*50 + "| 100% Time Remaining: 0 minutes 0 seconds                  ")
+	conn.commit()
+	c.close()
+	conn.close()
+
+def readColumns(filename, column_nums):
+	output = dict()
+	for name, num in column_nums.items():
+		output[name] = list()
 	with open(filename, 'r') as file:
 		header = file.readline()
-		for line in file:
-			cells = line.split(',')
-			loc_id = getLocationID(cells[location_col - 1], location_type)
-			cond_id = getConditionID(cells[condition_col - 1])
-			mort = int(cells[mortality_col - 1])
-			year = int(cells[year_col - 1])
-			conn = psycopg2.connect("dbname=health")
-			c = conn.cursor()
-			c.execute("INSERT INTO datapoint VALUES (%s, %s, NULL, NULL, %s, %s, -1, -1, 'all', 'all')", (cond_id, loc_id, mort, year))
-			conn.commit()
-			c.close()
-			conn.close()
-
-
+		for row in file:
+			cells = row.split(',')
+			for name, num in column_nums.items():
+				output[name].append(cells[num - 1])
+	return output
 
 def getConditionID(name):
 	conn = psycopg2.connect("dbname=health")
@@ -73,5 +144,6 @@ def formatUID(idval):
 	return (4 - idlen)*'0' + str(idval)
 
 
-importConditions("mort_data.csv", 3)
-importDataVals("mort_data.csv", 4, 'state', 3, 5, 1)
+loadConditions("mort_data.csv", 3)
+cols = readColumns("mort_data.csv", {"locations": 4, "conditions": 3, "years": 1, "mortalities": 5})
+loadDataPoints(locations=cols["locations"], location_type='state', conditions=cols["conditions"], years=cols["years"], mortalities=cols["mortalities"])

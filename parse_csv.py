@@ -3,7 +3,7 @@ import psycopg2
 def loadConditions(filename, column_num):
 	conn = psycopg2.connect("dbname=health")
 	c = conn.cursor()
-	for name, cond in readColumn(filename, {"conditions": column_num}):
+	for cond in readColumns(filename, {"conditions": column_num})["conditions"]:
 		cond_id = getConditionID(cond)
 		if cond_id == None:
 			c.execute("SELECT uid FROM condition")
@@ -72,14 +72,14 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 
 def readColumns(filename, column_nums):
 	output = dict()
-	for val in column_nums:
-		output.append(list())
+	for name, num in column_nums.items():
+		output[name] = list()
 	with open(filename, 'r') as file:
 		header = file.readline()
 		for row in file:
 			cells = row.split(',')
-			for name, num in column_nums:
-				output[name] = cells[num]
+			for name, num in column_nums.items():
+				output[name].append(cells[num])
 	return output
 
 def getConditionID(name):

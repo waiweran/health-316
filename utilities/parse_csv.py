@@ -142,8 +142,3 @@ def makeUID(existingIDs):
 def formatUID(idval):
 	idlen = len(str(idval))
 	return (4 - idlen)*'0' + str(idval)
-
-
-loadConditions("mort_data.csv", 3)
-cols = readColumns("mort_data.csv", {"locations": 4, "conditions": 3, "years": 1, "mortalities": 5})
-loadDataPoints(locations=cols["locations"], location_type='state', conditions=cols["conditions"], years=cols["years"], mortalities=cols["mortalities"])

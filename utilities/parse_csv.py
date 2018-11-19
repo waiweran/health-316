@@ -52,36 +52,32 @@ def loadDataPoints(locations, location_type, conditions, years, values, data_typ
 	startTime = time.time()
 
 	for i in range(0, length):	
-		try:
-			cond_id = getConditionID(condition_list[-1])
-			if i < len(condition_list):
-				cond_id = getConditionID(condition_list[i])
-			loc_id = getLocationID(location_list[-1], location_type)
-			if i < len(location_list):
-				loc_id = getLocationID(location_list[i], location_type)
-			val = value_list[-1]
-			if i < len(value_list):
-				val = value_list[i]
-			year = year_list[-1]
-			if i < len(year_list):
-				year = year_list[i]
-			minage = minage_list[-1]
-			if i < len(minage_list):
-				minage = minage_list[i]
-			maxage = maxage_list[-1]
-			if i < len(maxage_list):
-				maxage = maxage_list[i]
-			gen = gender_list[-1]
-			if i < len(gender_list):
-				gen = gender_list[i]
-			ethn = ethn_list[-1]
-			if i < len(ethn_list):
-				ethn = ethn_list[i]
+		cond_id = getConditionID(condition_list[-1])
+		if i < len(condition_list):
+			cond_id = getConditionID(condition_list[i])
+		loc_id = getLocationID(location_list[-1], location_type)
+		if i < len(location_list):
+			loc_id = getLocationID(location_list[i], location_type)
+		val = value_list[-1]
+		if i < len(value_list):
+			val = value_list[i]
+		year = year_list[-1]
+		if i < len(year_list):
+			year = year_list[i]
+		minage = minage_list[-1]
+		if i < len(minage_list):
+			minage = minage_list[i]
+		maxage = maxage_list[-1]
+		if i < len(maxage_list):
+			maxage = maxage_list[i]
+		gen = gender_list[-1]
+		if i < len(gender_list):
+			gen = gender_list[i]
+		ethn = ethn_list[-1]
+		if i < len(ethn_list):
+			ethn = ethn_list[i]
 
-			c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, val, data_type, pop_scaled, year, minage, maxage, gen, ethn))
-
-		except:
-			print("Data Error: Skipping Entry " + str(i))
+		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, val, data_type, pop_scaled, year, minage, maxage, gen, ethn))
 
 		progress = round(i*100/len(conditions), 1)
 		barsize = int(progress/2)

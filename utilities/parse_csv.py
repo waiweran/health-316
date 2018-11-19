@@ -105,10 +105,11 @@ def readColumns(filename, column_nums):
 	output = dict()
 	for name, num in column_nums.items():
 		output[name] = list()
+	index = 0
 	with open(filename, 'r') as file:
 		header = file.readline()
 		for row in file:
-			cells = row.split(',')
+			cells = split(row)
 			for name, num in column_nums.items():
 				output[name].append(cells[num - 1])
 	return output
@@ -142,3 +143,21 @@ def makeUID(existingIDs):
 def formatUID(idval):
 	idlen = len(str(idval))
 	return (4 - idlen)*'0' + str(idval)
+
+def split(row):
+	output = list()
+	start = 0
+	while True:
+		comma = row.index(',', start)
+		output.append(row[start:comma])
+		start = comma + 1
+		if row[start] == '"':
+			quote = row.index('"', start + 1)
+			output.append(row[start+1:quote])
+			start = quote + 2
+		if row.find(',', start) < 0:
+			output.append(row[start:])
+			return output
+
+
+

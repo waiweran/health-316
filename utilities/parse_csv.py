@@ -140,15 +140,16 @@ def split(row):
 	output = list()
 	start = 0
 	while True:
-		comma = row.index(',', start)
-		output.append(row[start:comma])
-		start = comma + 1
 		if row[start] == '"':
 			quote = row.index('"', start + 1)
 			output.append(row[start+1:quote])
 			start = quote + 2
+		else: 		
+			comma = row.index(',', start)
+			output.append(row[start:comma])
+			start = comma + 1
 		if row.find(',', start) < 0:
-			output.append(row[start:])
+			output.append(row[start:].replace('"', ''))
 			return output
 
 

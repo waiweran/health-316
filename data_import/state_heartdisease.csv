@@ -1,3 +1,4 @@
+Year,LocationAbbr,LocationDesc,GeographicLevel,DataSource,Class,Topic,Data_Value,Data_Value_Unit,Data_Value_Type,Data_Value_Footnote_Symbol,Data_Value_Footnote,StratificationCategory1,Stratification1,StratificationCategory2,Stratification2,TopicID,LocationID,Location 1
 2014,MN,Minnesota,State,NVSS,Cardiovascular Diseases,Heart Disease Mortality,68.2,"per 100,000 population","Age-adjusted, 3-year Average Rate",,,Gender,female,Race/Ethnicity,Hispanic,T2,27,"(46.3159, -94.3068)"
 2014,NH,New Hampshire,State,NVSS,Cardiovascular Diseases,Heart Disease Mortality,71.9,"per 100,000 population","Age-adjusted, 3-year Average Rate",,,Gender,all,Race/Ethnicity,Hispanic,T2,33,"(43.6834, -71.5794)"
 2014,KY,Kentucky,State,NVSS,Cardiovascular Diseases,Heart Disease Mortality,75.6,"per 100,000 population","Age-adjusted, 3-year Average Rate",,,Gender,female,Race/Ethnicity,Hispanic,T2,21,"(37.5266, -85.29)"

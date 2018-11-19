@@ -31,14 +31,12 @@ def loadConditions(filename, column_num):
 	c.close()
 	conn.close()
 
-def loadDataPoints(locations, location_type, conditions, years, prevalences=[None], incidences=[None], mortalities=[None], min_ages=[-1], max_ages=[-1], genders=['all'], race_ethnicities=['all']):
+def loadDataPoints(locations, location_type, conditions, years, values, data_type, pop_scaled, min_ages=[-1], max_ages=[-1], genders=['all'], race_ethnicities=['all']):
 	print("Loading Datapoints:")
 
 	condition_list = list(conditions)
 	location_list = list(locations)
-	prevalence_list = list(prevalences)
-	incidence_list = list(incidences)
-	mortality_list = list(mortalities)
+	value_list = list(values)
 	year_list = list(years)
 	minage_list = list(min_ages)
 	maxage_list = list(max_ages)
@@ -60,15 +58,9 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 		loc_id = getLocationID(location_list[-1], location_type)
 		if i < len(location_list):
 			loc_id = getLocationID(location_list[i], location_type)
-		prev = prevalence_list[-1]
-		if i < len(prevalence_list):
-			prev = prevalence_list[i]
-		inc = incidence_list[-1]
-		if i < len(incidence_list):
-			inc = incidence_list[i]
-		mort = mortality_list[-1]
-		if i < len(mortality_list):
-			mort = mortality_list[i]
+		val = value_list[-1]
+		if i < len(value_list):
+			val = value_list[i]
 		year = year_list[-1]
 		if i < len(year_list):
 			year = year_list[i]
@@ -85,7 +77,7 @@ def loadDataPoints(locations, location_type, conditions, years, prevalences=[Non
 		if i < len(ethn_list):
 			ethn = ethn_list[i]
 
-		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, prev, inc, mort, year, minage, maxage, gen, ethn))
+		c.execute("INSERT INTO datapoint VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (cond_id, loc_id, val, data_type, pop_scaled, year, minage, maxage, gen, ethn))
 
 		progress = round(i*100/len(conditions), 1)
 		barsize = int(progress/2)

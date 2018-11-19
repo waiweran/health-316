@@ -24,9 +24,9 @@ CREATE TABLE condition_name (
 CREATE TABLE datapoint (
 	condition_id CHAR(4) NOT NULL REFERENCES condition(uid),
 	location_id CHAR(4) NOT NULL REFERENCES location(uid),
-	prevalence BIGINT,
-	incidence BIGINT,
-	mortality BIGINT,
+	prevalence REAL,
+	incidence REAL,
+	mortality REAL,
 	year SMALLINT NOT NULL,
 	min_age SMALLINT NOT NULL,
 	max_age SMALLINT NOT NULL,

@@ -1,4 +1,4 @@
-from plotly import plotly
+from plotly import plotly, tools
 
 plotly.sign_in("liuharryk", "WkCtIN7yoxMvGpuyCzew")
 
@@ -34,7 +34,7 @@ def make_states_plot(plot_locations, plot_data, tooltip_labels, colorscale_label
 	             )
 	    
 	fig = dict( data=data, layout=layout )
-	return plotly.plot(fig)
+	return tools.get_embed(plotly.plot(fig, auto_open=False))
 
 def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_label, plot_title):
 	scl = [[0.0, 'rgb(242,240,247)'],[0.2, 'rgb(218,218,235)'],[0.4, 'rgb(188,189,220)'],\
@@ -68,4 +68,4 @@ def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_la
 	)
 	    
 	fig = dict( data=data, layout=layout )
-	return plotly.plot(fig)
+	return tools.get_embed(plotly.plot(fig, auto_open=False))

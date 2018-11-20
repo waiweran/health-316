@@ -24,15 +24,15 @@ CREATE TABLE condition_name (
 CREATE TABLE datapoint (
 	condition_id CHAR(4) NOT NULL REFERENCES condition(uid),
 	location_id CHAR(4) NOT NULL REFERENCES location(uid),
-	prevalence BIGINT,
-	incidence BIGINT,
-	mortality BIGINT,
+	value REAL,
+	type VARCHAR(128) NOT NULL,
+	population_scaled BOOLEAN NOT NULL,
 	year SMALLINT NOT NULL,
 	min_age SMALLINT NOT NULL,
 	max_age SMALLINT NOT NULL,
 	gender CHAR(6) NOT NULL CHECK(gender = 'male' OR gender = 'female' OR gender = 'all'),
 	race_ethnicity VARCHAR(128) NOT NULL,
-	PRIMARY KEY(condition_id, location_id, year, min_age, max_age, gender, race_ethnicity)
+	PRIMARY KEY(condition_id, location_id, type, population_scaled, year, min_age, max_age, gender, race_ethnicity)
 	);
 
 CREATE FUNCTION TF_in_restriction() RETURNS TRIGGER AS $$

@@ -1,4 +1,7 @@
+import sys
+sys.path.append("..")
 from flask import Flask, render_template, request
+from utilities import map_plot as plot
 import psycopg2
 
 app = Flask(__name__)
@@ -20,7 +23,7 @@ def pmi_page():
 
 @app.route('/mapfunction')
 def map_function():
-    return 
+    return plot.make_states_plot(["NC", "SC"], [2, 3], ["A", "B"], "Hi", "Lo")
 
 @app.route('/process_data', methods=['GET', 'POST'])
 def process_data():

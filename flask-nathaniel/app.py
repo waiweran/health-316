@@ -18,15 +18,16 @@ def locations_page():
 def pmi_page():
     return render_template('PMIdata.html')
 
+@app.route('/mapfunction')
+def map_function():
+    return 
 
 @app.route('/process_data', methods=['GET', 'POST'])
 def process_data():
 
-    if request.method == 'POST':  # this block is only entered when the form is submitted
+    if request.method == 'GET':  # this block is only entered when the form is submitted
         conditionName = request.form.get('conditionName', 'None')
-    GDPrange = request.form.get('GDPrange')
-    AIrange = request.form.get('AIrange')
-    Poprange = request.form.get('Poprange')
+    Agerange = request.form.get('AgeRange')
 
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()

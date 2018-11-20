@@ -13,7 +13,7 @@
 
     <body>
         <!-- Top Menu -->
-        <div class=nav>
+        <div class=locationnav>
             <h1>
                 <a id=brandname href="/">LocationData
                     <i class="material-icons md-48">location_on</i>
@@ -26,35 +26,42 @@
 
             <div class="leftnav-content">
 
-                <form action="{{ url_for('process_data') }}" method="POST">
+                <form action="{{ url_for('process_data') }}" method="GET">
                     <!–– Condition Text -->
                     <p>
                         <strong>Condition Name</strong>
                     </p>
-                    <label id="text">
-                        <input type="text" name="conditionName"/>
-                    </label>
+                    
+                    <h3>Your selected condition</h3>
 
                     <!–– Sliders for Query -->
                     <p>
                         <strong>Query By</strong>
                     </p>
 
-                    <label id="slider">
-                        <h3>GDP</h3>
-                        <input type="range" min="650" max="125000" value="17300" class="slider" id="GDPrange" name="GDPrange"/>
-                        <h4>Value: <span id="outputGDP"></span></h4>
+                    <label id="formitem">
+                        <h3>Age</h3>
+                        <input type="range" min="1" max="100" value="20" class="formitem" id="AgeRange" name="AgeRange"/>
+                        <h4>Value: <span id="outputAge"></span></h4>
                     </label>
-                    <label id="slider">
-                        <h3>Average Income</h3>
-                        <input type="range" min="1" max="64000" value="9700" class="slider" id="AIrange" name="AIrange"/>
-                        <h4>Value: <span id="outputAI"></span></h4>
+
+                    <label id="formitem">
+                        <h3>Gender</h3>
+                        <input type="radio" name="gender" value="all" checked> All<br>
+                        <input type="radio" name="gender" value="male"> Male<br>
+                        <input type="radio" name="gender" value="female"> Female<br>
                     </label>
-                    <label id="slider">
-                        <h3>Population (Millions)</h3>
-                        <input type="range" min="0.50" max="1400" value="50" class="slider" id="Poprange" name="Poprange"/>
-                        <h4>Value: <span id="outputPop"></span></h4>
+                    
+                     <label id="formitem">
+                        <h3>Race</h3>
+                        <input type="radio" name="race" value="all" checked> All<br>
+                        <input type="radio" name="race" value="White"> White<br>
+                        <input type="radio" name="race" value="Hispanic"> Hispanic<br>
+                        <input type="radio" name="race" value="Asian"> Asian<br>
+                        <input type="radio" name="race" value="Black"> Black<br>
+                        <input type="radio" name="race" value="Other" checked> Other<br>
                     </label>
+
 
                     <!–– Submission -->
                     <label>
@@ -67,34 +74,21 @@
 
         <section class="mapzone">
             
-            <iframe width="900" height="800" frameborder="0" scrolling="no" src="//plot.ly/~liuharryk/1.embed"></iframe>
-
-
+            <iframe width="900" height="800" frameborder="0" scrolling="no" src="{{ url_for('mapfunction') }}"></iframe>
             
         </section>
 
     </body>
 
     <script>
-        var GDPslider = document.getElementById("GDPrange");
-        var AIslider = document.getElementById("AIrange");
-        var Popslider = document.getElementById("Poprange");
-        var outputGDP = document.getElementById("outputGDP");
-        var outputAI = document.getElementById("outputAI");
-        var outputPop = document.getElementById("outputPop");
-        outputGDP.innerHTML = GDPslider.value;
-        outputAI.innerHTML = AIslider.value;
-        outputPop.innerHTML = Popslider.value;
+        var Ageslider = document.getElementById("AgeRange");
+        var outputAge = document.getElementById("outputAge");
+        outputAge.innerHTML = Ageslider.value;
 
-        GDPslider.oninput = function() {
-            outputGDP.innerHTML = this.value;
+        Ageslider.oninput = function() {
+            outputAge.innerHTML = this.value;
         }
-        AIslider.oninput = function() {
-            outputAI.innerHTML = this.value;
-        }
-        Popslider.oninput = function() {
-            outputPop.innerHTML = this.value;
-        }
+
     </script>    
 
 </html>

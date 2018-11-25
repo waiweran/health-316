@@ -12,16 +12,21 @@
     </head>
 
     <body>
-        
-         <!-- Top Menu -->
+
+        <!-- Top Menu -->
         <div class=nav>
-            <h1><a id=brandname href="/">HealthMap <i class="material-icons">map</i></a></h1>
+            <h1><a id=brandname href="/">ConditionList <i class="material-icons">format_list_bulleted</i></a></h1>
         </div>
-        
-        <div>
-        
+
+        <div class=clist>
             
-        
+            <ul>
+                {% for condition in condition_name %}     
+                <li><a href="{{url_for('locations_page', condition_name=condition[0])}}">{{condition[0]}}</a></li>
+                {% endfor %}
+            </ul>
+
+
         </div>
 
 

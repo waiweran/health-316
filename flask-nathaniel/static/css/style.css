@@ -241,3 +241,34 @@ label {
     position: fixed;
     overflow-x: hidden;
 }
+
+.clist {
+    display: flex;
+    justify-content: center;
+    margin-top:100px;
+    background-color: #222;
+}   
+
+.clist ul{
+    list-style-type: none;
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+}
+
+.clist a:link, .clist a:visited {
+    width: 400px;
+    height: 50px;
+    line-height: 50px;
+    background-color: cadetblue;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px;
+}
+
+
+.clist a:hover, .clist a:active {
+    background-color: darkgreen;
+}

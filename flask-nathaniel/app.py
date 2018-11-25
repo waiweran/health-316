@@ -13,9 +13,15 @@ def main_page():
 
 
 @app.route('/locations')
-def locations_page():
-    return render_template('locations.html')
+def conditions_page():
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute("SELECT condition_name.name FROM condition_name")
+    return render_template('conditionlist.html', condition_name = c)
 
+@app.route('/locations/<condition_name>')
+def locations_page(condition_name):
+    return render_template('locations.html')
 
 @app.route('/PMIdata')
 def pmi_page():

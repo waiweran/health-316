@@ -28,11 +28,11 @@
 
                 <form action="{{ url_for('process_data') }}" method="GET">
                     <!–– Condition Text -->
-                    <p>
-                        <strong>Condition Name</strong>
-                    </p>
                     
                     <h3>Your selected condition</h3>
+                    
+                    <p id="cname">
+                    </p>
 
                     <!–– Sliders for Query -->
                     <p>
@@ -88,6 +88,11 @@
         Ageslider.oninput = function() {
             outputAge.innerHTML = this.value;
         }
+        
+        var x = document.URL;
+        var y = x;
+        x = x.substr(y.lastIndexOf('/')+1)
+        document.getElementById("cname").innerHTML = x;
 
     </script>    
 

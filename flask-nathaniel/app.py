@@ -18,9 +18,26 @@ def conditions_page():
     c = conn.cursor()
     c.execute("SELECT condition_name.name FROM condition_name")
     return render_template('conditionlist.html', condition_name = c)
+    conn.commit()
+    c.close()
+    conn.close()
 
 @app.route('/locations/<condition_name>')
 def locations_page(condition_name):
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute('''
+        SELECT location.name, datapoint.value, datapoint.type, datapoint.population_scaled
+        FROM datapoint, condition_name, location
+        WHERE datapoint.condition_id = condition_name.condition_id
+        AND datapoint.location_id = location.uid
+        AND condition_name.name = %s;
+    ''', (condition_name,))
+    results = c.fetchall()
+    conn.commit()
+    c.close()
+    conn.close()
+    print(results)
     return render_template('locations.html')
 
 @app.route('/PMIdata')
@@ -37,14 +54,6 @@ def process_data():
     if request.method == 'GET':  # this block is only entered when the form is submitted
         conditionName = request.form.get('conditionName', 'None')
     Agerange = request.form.get('AgeRange')
-
-    conn = psycopg2.connect("dbname=health")
-    c = conn.cursor()
-    c.execute("SELECT mortality FROM condition_name, datapoint, location WHERE condition_name.name = %s AND condition_name.condition_id = datapoint.condition_id AND datapoint.location_id = location.uid AND location.name = 'North Carolina' AND datapoint.year = 2016", (conditionName,))
-    mortality = c.fetchone()[0]
-    conn.commit()
-    c.close()
-    conn.close()
 
     return '''<h1> The condition name you entered is: **{}**. Your selected GDP value is **{}**. Your selected AI value is **{}**. Your selected Pop value is **{}**.  {} people died in the US in 2016 from your disease'''.format(conditionName, GDPrange, AIrange, Poprange, mortality)
 

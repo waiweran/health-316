@@ -3,6 +3,7 @@ sys.path.append("..")
 from flask import Flask, render_template, request
 from utilities import map_plot as plot
 import psycopg2
+import database as db
 
 app = Flask(__name__)
 
@@ -24,20 +25,8 @@ def conditions_page():
 
 @app.route('/locations/<condition_name>')
 def locations_page(condition_name):
-    conn = psycopg2.connect("dbname=health")
-    c = conn.cursor()
-    c.execute('''
-        SELECT location.name, datapoint.value, datapoint.type, datapoint.population_scaled
-        FROM datapoint, condition_name, location
-        WHERE datapoint.condition_id = condition_name.condition_id
-        AND datapoint.location_id = location.uid
-        AND condition_name.name = %s;
-    ''', (condition_name,))
-    results = c.fetchall()
-    conn.commit()
-    c.close()
-    conn.close()
-    print(results)
+    datatypes = db.getDataTypes(condition_name)
+    print(datatypes)
     return render_template('locations.html')
 
 @app.route('/PMIdata')

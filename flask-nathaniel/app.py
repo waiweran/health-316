@@ -3,10 +3,12 @@ sys.path.append("..")
 from flask import Flask, render_template, request
 from utilities import map_plot as plot
 import psycopg2
+import hashlib
 import database as db
 
 app = Flask(__name__)
 
+plots = dict()
 
 @app.route('/')
 def main_page():
@@ -27,17 +29,19 @@ def conditions_page():
 def locations_page(condition_name):
     datatypes = db.getDataTypes(condition_name)
     locations, values = db.getMapData(condition_name, datatypes[0])
-    print(locations)
-    print(values)
-    return render_template('locations.html')
+    plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
+    plot_link = hashlib.md5(plot_html.encode()).hexdigest()
+    plots[plot_link] = plot_html
+
+    return render_template('locations.html', plot_link = plot_link)
 
 @app.route('/PMIdata')
 def pmi_page():
     return render_template('PMIdata.html')
 
-@app.route('/mapfunction')
-def map_function():
-    return plot.make_states_plot(["NC", "SC"], [2, 3], ["A", "B"], "Hi", "Lo")
+@app.route('/map_function/<plot_id>')
+def map_function(plot_id):
+    return plots[plot_id]
 
 @app.route('/process_data', methods=['GET', 'POST'])
 def process_data():

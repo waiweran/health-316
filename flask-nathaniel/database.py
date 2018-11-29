@@ -10,7 +10,7 @@ state_codes = {
     'Connecticut':'CT',
     'Delaware':'DE',
     'Florida':'FL',
-    'Georigia':'GA',
+    'Georgia':'GA',
     'Hawaii':'HI',
     'Idaho':'ID',
     'Illinois':'IL',
@@ -43,7 +43,7 @@ state_codes = {
     'South Carolina':'SC',
     'South Dakota':'SD',
     'Tennessee':'TN',
-    'Texas':'TX'
+    'Texas':'TX',
     'Utah':'UT',
     'Vermont':'VT',
     'Virginia':'VA',
@@ -56,6 +56,7 @@ state_codes = {
 
 def getDataTypes(condition_name):
     '''Lists the types of data in the database for the given condition'''
+    print(condition_name)
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''

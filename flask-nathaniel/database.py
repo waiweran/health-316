@@ -2,6 +2,7 @@ import psycopg2
 
 def getDataTypes(condition_name):
     '''Lists the types of data in the database for the given condition'''
+    conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
         SELECT datapoint.type

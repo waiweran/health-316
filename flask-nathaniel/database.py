@@ -1,8 +1,8 @@
 import psycopg2
 
 def getDataTypes(condition_name):
-	'''Lists the types of data in the database for the given condition'''
-	c = conn.cursor()
+    '''Lists the types of data in the database for the given condition'''
+    c = conn.cursor()
     c.execute('''
         SELECT datapoint.type
         FROM datapoint, condition_name
@@ -14,8 +14,8 @@ def getDataTypes(condition_name):
     conn.close()
 
 def getMapData(condition_name, data_type):
-	'''Gets a dataset in map plotting format given a condition name and a data type'''
-	conn = psycopg2.connect("dbname=health")
+    '''Gets a dataset in map plotting format given a condition name and a data type'''
+    conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
         SELECT location.name, datapoint.value

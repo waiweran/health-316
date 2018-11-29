@@ -26,7 +26,7 @@ def conditions_page():
 @app.route('/locations/<condition_name>')
 def locations_page(condition_name):
     datatypes = db.getDataTypes(condition_name)
-    print(datatypes)
+    print("Data Types: " + str(datatypes))
     return render_template('locations.html')
 
 @app.route('/PMIdata')

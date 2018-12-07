@@ -13,7 +13,20 @@
   .content {
     position:relative;
   }
+
+.cardcontainer{
+    margin-top: 70px;
+    margin-left: 30px;
+}
+
+.cardcontainer h2 {
+    color:white;
+}
   
+.cardcontainer h3 {
+    color:black;
+}
+
   @keyframes slideIn {
     0% {
       background-color:#abc;

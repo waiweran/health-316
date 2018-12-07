@@ -1,0 +1,26 @@
+.card {
+    background-color:#eee;
+    box-sizing:border-box;
+    float:left;
+    height:10em;
+    margin:.5em;
+    padding:1em;
+    position:relative;
+    width:45%;
+    overflow: hidden
+  }
+
+  .content {
+    position:relative;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      background-color:#abc;
+      width:0;
+    }
+    100% {
+      background-color:#def;
+      width:100%;
+    }
+  }

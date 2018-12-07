@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Blog Form</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/blog_form.css" type="text/css" media="screen"/>
+        <link rel="icon" href="/static/img/favicon.png">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script text="text/javascript" src="/static/js/blog_form.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="wrapper">
+              <ul class="steps">
+                <li class="is-active">General</li>
+                <li>Story</li>
+              </ul>
+              <form class="form-wrapper">
+                <fieldset class="section is-active">
+                  <h3>Personal Details</h3>
+                  <input type="text" name="name" id="name" placeholder="Name">
+                  <input type="text" name="location" id="location" placeholder="Location">
+                  <input type="text" name="disease" id="disease" placeholder="Disease">
+                  <input type="date" name="date" id="date" placeholder="Date">
+                  <div class="button">Next</div>
+                </fieldset>
+                <fieldset class="section">
+                    <h3>Story</h3>
+                    <div class="center">
+                        <textarea id="message" name="message"></textarea>
+                    </div>
+                    <input class="submit button" type="submit" value="Submit Blog Post">
+                </fieldset>
+                <fieldset class="section">
+                  <h3>Account Created!</h3>
+                  <p>Your account has now been created.</p>
+                  <div class="button">Reset Form</div>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+    </body>
+</html>

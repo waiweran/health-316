@@ -1,5 +1,6 @@
 CREATE TABLE location (
 	uid CHAR(4) NOT NULL PRIMARY KEY,
+	abbr CHAR(4) NOT NULL,
 	name VARCHAR(256) NOT NULL,
 	type CHAR(7) NOT NULL CHECK(type = 'country' OR type = 'state' OR type = 'county'),
 	population BIGINT,

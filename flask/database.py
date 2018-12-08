@@ -1,8 +1,24 @@
 import psycopg2
 
+def getAllConditions():
+    '''Lists the types of data in the database for the given condition'''
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute('''
+        SELECT DISTINCT type, name
+        FROM datapoint, condition_name
+        WHERE datapoint.condition_id = condition_name.condition_id
+        AND condition_name.name = %s
+    ''', (condition_name,))
+    results = c.fetchall()
+    c.close()
+    conn.close()
+    types, names = zip(*results)
+    return types
+
+
 def getDataTypes(condition_name):
     '''Lists the types of data in the database for the given condition'''
-    print(condition_name)
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
@@ -100,6 +116,5 @@ def getMapData(condition_name, data_type):
     results = c.fetchall()
     c.close()
     conn.close()
-    loc_names, values = zip(*results)
-    locations = [state_codes[name] for name in loc_names]
+    locations, values = zip(*results)
     return locations, values

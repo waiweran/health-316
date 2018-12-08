@@ -67,7 +67,7 @@ def process_data():
         Gender = request.form.get('Gender', 'NONE')
         Race = request.form.get('Race', 'NONE')
 
-    return '''<h1> Your selected GDP value is **{}**. Your selected AI value is **{}**. Your selected Pop value is **{}**.  {} people died in the US in 2016 from your disease'''.format(conditionName, GDPrange, AIrange, Poprange, mortality)
+    return '''<h1> Your selected Age Range is **{}**. Your selected Gender is **{}**. Your selected Race is **{}**. '''.format(AgeRange, Gender, Race)
 
 
 if __name__ == "__main__":

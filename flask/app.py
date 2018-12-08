@@ -63,7 +63,7 @@ def map_function(plot_id):
 def process_data():
 
     if request.method == 'GET':  # this block is only entered when the form is submitted
-        Agerange = request.form.get('AgeRange', 'NONE')
+        AgeRange = request.form.get('AgeRange', 'NONE')
         Gender = request.form.get('Gender', 'NONE')
         Race = request.form.get('Race', 'NONE')
 

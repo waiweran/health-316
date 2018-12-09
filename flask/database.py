@@ -144,7 +144,7 @@ def getPopular():
     c.execute('''
         SELECT DISTINCT condition_id, COUNT(condition_id)
         FROM history
-        ORDER BY COUNT(condition_id);
+        ORDER BY COUNT(condition_id) DESC;
     ''')
     results = c.fetchall()
     c.close()

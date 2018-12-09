@@ -133,7 +133,7 @@ def updateHistory(condition_name):
     ''', (condition_name,))
     results = c.fetchone()
     c.execute('''
-        INSERT INTO history VALUES(now, %s)
+        INSERT INTO history VALUES(NOW(), %s)
     ''', (results[0]))
     c.close()
     conn.close()

@@ -1,7 +1,6 @@
 import sys
-sys.path.append("..")
 from flask import Flask, render_template, request
-from utilities import map_plot as plot
+import map_plot as plot
 import psycopg2
 import hashlib
 import database as db
@@ -16,7 +15,9 @@ def login_page():
 
 @app.route('/top_diseases')
 def top_diseases():
-    return render_template('top_diseases.html')
+    tt = db.getPopular()
+    tt = tt[:10]
+    return render_template('top_diseases.html', topten = tt)
 
 @app.route('/blog_form')
 def blog_form():
@@ -42,13 +43,17 @@ def conditions_page():
 
 @app.route('/locations/<condition_name>')
 def locations_page(condition_name):
+    db.updateHistory(condition_name)
     datatypes = db.getDataTypes(condition_name)
-    locations, values = db.getMapData(condition_name, datatypes[0])
+    y = db.getDataYears(condition_name, datatypes[0])
+    g = db.getDataGenders(condition_name,datatypes[0])
+    r = db.getDataRaces(condition_name,datatypes[0])
+    locations, values = db.getMapData(condition_name, datatypes[0], y[0])
     plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html
 
-    return render_template('locations.html', plot_link = plot_link)
+    return render_template('locations.html', plot_link = plot_link, genders = g, races=r)
 
 @app.route('/PMIdata')
 def pmi_page():

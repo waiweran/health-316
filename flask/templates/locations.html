@@ -47,19 +47,16 @@
 
                     <label id="formitem">
                         <h3>Gender</h3>
-                        <input type="radio" name="gender" value="all" checked> All<br>
-                        <input type="radio" name="gender" value="male"> Male<br>
-                        <input type="radio" name="gender" value="female"> Female<br>
+                        {% for option in genders %}     
+                        <input type="radio" name="gender" value={{option}}> {{option}}<br>
+                        {% endfor %}
                     </label>
                     
                      <label id="formitem">
                         <h3>Race</h3>
-                        <input type="radio" name="race" value="all" checked> All<br>
-                        <input type="radio" name="race" value="White"> White<br>
-                        <input type="radio" name="race" value="Hispanic"> Hispanic<br>
-                        <input type="radio" name="race" value="Asian"> Asian<br>
-                        <input type="radio" name="race" value="Black"> Black<br>
-                        <input type="radio" name="race" value="Other" checked> Other<br>
+                        {% for option in races %}     
+                        <input type="radio" name="race" value={{option}}> {{option}}<br>
+                        {% endfor %}
                     </label>
 
 

@@ -8,8 +8,7 @@ def getAllConditions():
     results = c.fetchall()
     c.close()
     conn.close()
-    types, names = zip(*results)
-    return types
+    return list(results[0])
 
 
 def getDataTypes(condition_name):
@@ -42,7 +41,8 @@ def getDataYears(condition_name, data_type):
     results = c.fetchall()
     c.close()
     conn.close()
-    return results
+    output = [val[0] for val in results]
+    return output
 
 def getDataAges(condition_name, data_type):
     '''Lists the age ranges for the given condition and data type'''
@@ -58,7 +58,8 @@ def getDataAges(condition_name, data_type):
     results = c.fetchall()
     c.close()
     conn.close()
-    return results
+    output = [val[0] for val in results]
+    return output
 
 def getDataGenders(condition_name, data_type):
     '''Lists the genders for the given condition and data type'''
@@ -74,6 +75,8 @@ def getDataGenders(condition_name, data_type):
     results = c.fetchall()
     c.close()
     conn.close()
+    output = [val[0] for val in results]
+    return output
 
 def getDataRaces(condition_name, data_type, ):
     '''Lists the races/ethnicities for the given condition and data type'''
@@ -89,6 +92,8 @@ def getDataRaces(condition_name, data_type, ):
     results = c.fetchall()
     c.close()
     conn.close()
+    output = [val[0] for val in results]
+    return output
 
 def getMapData(condition_name, data_type):
     '''Gets a dataset in map plotting format given a condition name and a data type'''

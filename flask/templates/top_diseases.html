@@ -11,60 +11,10 @@
     </head>
     <body>
 
-        <ol>
-            <li>
-              <h4>Hardcoded List of Top Searched Diseases</h4>
-              <p>Disease Description joined from another database. Disease Description Database: https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/DDB/</p>
-              <p>Blog Story Links if Any</p>
-            </li>
-            <li>
-              <h4>Ischemic heart disease, or coronary artery disease</h4>
-              <p>The deadliest disease in the world is coronary artery disease (CAD). Also called ischemic heart disease, CAD occurs when the blood vessels that supply blood to the heart become narrowed. Untreated CAD can lead to chest pain, heart failure, and arrhythmias</p>
-              <p>Blog Story Links if Any</p>
-            </li>
-            <li>
-              <h4>Stroke</h4>
-              <p>A stroke occurs when an artery in your brain is blocked or leaks. This causes the oxygen-deprived brain cells to begin dying within minutes. During a stroke, you feel sudden numbness and confusion or have trouble walking and seeing. If left untreated, a stroke can cause long-term disability.</p>
-              <p>Ut enim ad minima veniam, amet, consectetur, adipisci velit, ducimus qui blanditiis.</p>
-              <p>Blog Story Links if Any</p>
-            </li>
-            <li>
-              <h4>Lower respiratory infections</h4>
-              <p> lower respiratory infection is an infection in your airways and lungs. It can be due to the flu, pneumonia, bronchitis, tuberculosis. Viruses usually cause lower respiratory infections. They can also be caused by bacteria. Coughing is the main symptom of a lower respiratory infection. You may also feel breathlessness, wheezing, and a tight feeling in your chest. Untreated lower respiratory infections can lead to breathing failure and death.</p>
-              <p>Blog Story Links if Any</p>
-            </li>
-            <li>
-                <h4>Ischemic heart disease, or coronary artery disease</h4>
-                <p>The deadliest disease in the world is coronary artery disease (CAD). Also called ischemic heart disease, CAD occurs when the blood vessels that supply blood to the heart become narrowed. Untreated CAD can lead to chest pain, heart failure, and arrhythmias</p>
-                <p>Blog Story Links if Any</p>
-              </li>
-              <li>
-                <h4>Stroke</h4>
-                <p>A stroke occurs when an artery in your brain is blocked or leaks. This causes the oxygen-deprived brain cells to begin dying within minutes. During a stroke, you feel sudden numbness and confusion or have trouble walking and seeing. If left untreated, a stroke can cause long-term disability.</p>
-                <p>Ut enim ad minima veniam, amet, consectetur, adipisci velit, ducimus qui blanditiis.</p>
-                <p>Blog Story Links if Any</p>
-              </li>
-              <li>
-                <h4>Lower respiratory infections</h4>
-                <p> lower respiratory infection is an infection in your airways and lungs. It can be due to the flu, pneumonia, bronchitis, tuberculosis. Viruses usually cause lower respiratory infections. They can also be caused by bacteria. Coughing is the main symptom of a lower respiratory infection. You may also feel breathlessness, wheezing, and a tight feeling in your chest. Untreated lower respiratory infections can lead to breathing failure and death.</p>
-                <p>Blog Story Links if Any</p>
-              </li>
-              <li>
-                <h4>Ischemic heart disease, or coronary artery disease</h4>
-                <p>The deadliest disease in the world is coronary artery disease (CAD). Also called ischemic heart disease, CAD occurs when the blood vessels that supply blood to the heart become narrowed. Untreated CAD can lead to chest pain, heart failure, and arrhythmias</p>
-                <p>Blog Story Links if Any</p>
-              </li>
-              <li>
-                <h4>Stroke</h4>
-                <p>A stroke occurs when an artery in your brain is blocked or leaks. This causes the oxygen-deprived brain cells to begin dying within minutes. During a stroke, you feel sudden numbness and confusion or have trouble walking and seeing. If left untreated, a stroke can cause long-term disability.</p>
-                <p>Ut enim ad minima veniam, amet, consectetur, adipisci velit, ducimus qui blanditiis.</p>
-                <p>Blog Story Links if Any</p>
-              </li>
-              <li>
-                <h4>Lower respiratory infections</h4>
-                <p> lower respiratory infection is an infection in your airways and lungs. It can be due to the flu, pneumonia, bronchitis, tuberculosis. Viruses usually cause lower respiratory infections. They can also be caused by bacteria. Coughing is the main symptom of a lower respiratory infection. You may also feel breathlessness, wheezing, and a tight feeling in your chest. Untreated lower respiratory infections can lead to breathing failure and death.</p>
-                <p>Blog Story Links if Any</p>
-              </li>
+        <ol>      
+            {% for option in topten %}     
+              <h4>{{option}}</h4>
+            {% endfor %}
           </ol>
         </div>
     </body>

@@ -15,7 +15,9 @@ def login_page():
 
 @app.route('/top_diseases')
 def top_diseases():
-    return render_template('top_diseases.html')
+    tt = db.getPopular()
+    tt = tt[:10]
+    return render_template('top_diseases.html', topten = tt)
 
 @app.route('/blog_form')
 def blog_form():

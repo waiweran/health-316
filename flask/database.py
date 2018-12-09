@@ -100,7 +100,7 @@ def getDataRaces(condition_name, data_type, ):
     output = [val[0] for val in results]
     return output
 
-def getMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='all', 'race_ethnicity='all'):
+def getMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='all', race_ethnicity='all'):
     '''Gets a dataset in map plotting format given a condition name and a data type'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()

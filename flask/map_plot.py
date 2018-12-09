@@ -1,4 +1,5 @@
 from plotly import plotly, tools
+import requests
 
 username = 'liuharryk'
 accountkey = 'WkCtIN7yoxMvGpuyCzew'
@@ -101,7 +102,7 @@ def get_pages(page_size):
         yield page
         
 def delete_files(page_size=500, filetype_to_delete='plot'):
-    for page in get_pages(username, page_size):
+    for page in get_pages(page_size):
         for x in range(0, len(page['children']['results'])):
             fid = page['children']['results'][x]['fid']
             res = requests.get('https://api.plot.ly/v2/files/' + fid, auth=auth, headers=headers)
@@ -112,5 +113,3 @@ def delete_files(page_size=500, filetype_to_delete='plot'):
                     # move to trash
                     requests.post('https://api.plot.ly/v2/files/'+fid+'/trash', auth=auth, headers=headers)
 
-delete_files(filetype_to_delete='plot')
-delete_files(filetype_to_delete='grid')

@@ -45,7 +45,7 @@ def locations_page(condition_name):
     datatypes = db.getDataTypes(condition_name)
     g = db.getDataGenders(condition_name,datatypes[0])
     r = db.getDataRaces(condition_name,datatypes[0])
-    locations, values = db.getMapData(condition_name, datatypes[0])
+    locations, values = db.getMapData(condition_name, datatypes[0], 2016)
     plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html

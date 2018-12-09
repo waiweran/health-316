@@ -4,11 +4,12 @@ def getAllConditions():
     '''Lists all conditions available in the database'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
-    c.execute('''SELECT name FROM condition_name;''')
+    c.execute('''SELECT name FROM condition_name ORDER BY name;''')
     results = c.fetchall()
     c.close()
     conn.close()
-    return list(results[0])
+    output = [val[0] for val in results]
+    return output
 
 
 def getDataTypes(condition_name):
@@ -32,11 +33,12 @@ def getDataYears(condition_name, data_type):
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT datapoint.year
+        SELECT DISTINCT year
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s;
+        AND datapoint.type = %s
+        ORDER BY year DESC;
     ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
@@ -49,11 +51,12 @@ def getDataAges(condition_name, data_type):
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT datapoint.min_age, datapoint.max_age
+        SELECT DISTINCT min_age, max_age
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s;
+        AND datapoint.type = %s
+        ORDER BY min_age;
     ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
@@ -66,11 +69,12 @@ def getDataGenders(condition_name, data_type):
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT datapoint.gender
+        SELECT DISTINCT gender
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s;
+        AND datapoint.type = %s
+        ORDER BY gender;
     ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
@@ -83,11 +87,12 @@ def getDataRaces(condition_name, data_type, ):
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT datapoint.race_ethnicity
+        SELECT DISTINCT race_ethnicity
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s;
+        AND datapoint.type = %s
+        ORDER BY race_ethnicity;
     ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
@@ -95,7 +100,7 @@ def getDataRaces(condition_name, data_type, ):
     output = [val[0] for val in results]
     return output
 
-def getMapData(condition_name, data_type):
+def getMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='all', 'race_ethnicity='all'):
     '''Gets a dataset in map plotting format given a condition name and a data type'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
@@ -105,8 +110,13 @@ def getMapData(condition_name, data_type):
         WHERE datapoint.condition_id = condition_name.condition_id
         AND datapoint.location_id = location.uid
         AND condition_name.name = %s
-        AND datapoint.type = %s;
-    ''', (condition_name, data_type))
+        AND datapoint.type = %s
+        AND datapoint.year = %s
+        AND datapoint.min_age = %s
+        AND datapoint.max_age = %s
+        AND datapoint.gender = %s
+        AND datapoint.race_ethnicity = %s;
+    ''', (condition_name, data_type, year, min_age, max_age, gender, race_ethnicity))
     results = c.fetchall()
     c.close()
     conn.close()

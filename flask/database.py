@@ -142,8 +142,9 @@ def getPopular():
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT condition_id, COUNT(condition_id)
-        FROM history
+        SELECT DISTINCT name, COUNT(history.condition_id)
+        FROM history, condition_name
+        WHERE history.condition_id = condition_name.condition_id
         ORDER BY COUNT(condition_id) DESC;
     ''')
     results = c.fetchall()

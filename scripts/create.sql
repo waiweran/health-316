@@ -1,8 +1,8 @@
 CREATE TABLE location (
 	uid CHAR(4) NOT NULL PRIMARY KEY,
-	abbr CHAR(4) NOT NULL,
+	abbr VARCHAR(4) NOT NULL,
 	name VARCHAR(256) NOT NULL,
-	type CHAR(7) NOT NULL CHECK(type = 'country' OR type = 'state' OR type = 'county'),
+	type VARCHAR(7) NOT NULL CHECK(type = 'country' OR type = 'state' OR type = 'county'),
 	population BIGINT,
 	avg_income DECIMAL(12,2),
 	gdp BIGINT
@@ -31,7 +31,7 @@ CREATE TABLE datapoint (
 	year SMALLINT NOT NULL,
 	min_age SMALLINT NOT NULL,
 	max_age SMALLINT NOT NULL,
-	gender CHAR(6) NOT NULL CHECK(gender = 'male' OR gender = 'female' OR gender = 'all'),
+	gender VARCHAR(6) NOT NULL CHECK(gender = 'male' OR gender = 'female' OR gender = 'all'),
 	race_ethnicity VARCHAR(128) NOT NULL,
 	PRIMARY KEY(condition_id, location_id, type, year, min_age, max_age, gender, race_ethnicity)
 	);

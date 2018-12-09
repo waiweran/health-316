@@ -61,11 +61,10 @@ def map_function(plot_id):
 
 @app.route('/process_data', methods=['GET', 'POST'])
 def process_data():
-
     if request.method == 'GET':  # this block is only entered when the form is submitted
-        AgeRange = request.form.get('AgeRange')
-        Gender = request.form.get('gender')
-        Race = request.form.get('race')
+        AgeRange = request.args.get('key', 'AgeRange')
+        Gender = request.args.get('key', 'Gender')
+        Race = request.args.get('key', 'Race')
 
     return '''<h1> Your selected Age Range is **{}**. Your selected Gender is **{}**. Your selected Race is **{}**. '''.format(AgeRange, Gender, Race)
 

@@ -36,6 +36,11 @@ CREATE TABLE datapoint (
 	PRIMARY KEY(condition_id, location_id, type, year, min_age, max_age, gender, race_ethnicity)
 	);
 
+CREATE TABLE history (
+	entry_timestamp TIMESTAMP NOT NULL PRIMARY KEY,
+	condition_id CHAR(4) NOT NULL
+	);
+
 CREATE FUNCTION TF_in_restriction() RETURNS TRIGGER AS $$
 BEGIN
 	IF EXISTS (SELECT * FROM location AS l1, location AS l2

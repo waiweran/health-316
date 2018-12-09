@@ -122,3 +122,19 @@ def getMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='
     conn.close()
     locations, values = zip(*results)
     return locations, values
+
+def updateHistory(condition_name):
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute('''
+        SELECT condition_id
+        FROM condition_name
+        WHERE condition_name.name = %s;
+    ''', (condition_name,))
+    results = c.fetchone()
+    c.execute('''
+        INSERT INTO history VALUES(now, %s)
+    ''', (results[0]))
+    c.close()
+    conn.close()
+

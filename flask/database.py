@@ -1,15 +1,20 @@
 import psycopg2
 
 def getAllConditions():
-    '''Lists all conditions available in the database'''
+    '''Lists the types of data in the database for the given condition'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
-    c.execute('''SELECT name FROM condition_name ORDER BY name;''')
+    c.execute('''
+        SELECT DISTINCT type, name
+        FROM datapoint, condition_name
+        WHERE datapoint.condition_id = condition_name.condition_id
+        AND condition_name.name = %s
+    ''', (condition_name,))
     results = c.fetchall()
     c.close()
     conn.close()
-    output = [val[0] for val in results]
-    return output
+    types, names = zip(*results)
+    return types
 
 
 def getDataTypes(condition_name):
@@ -20,7 +25,7 @@ def getDataTypes(condition_name):
         SELECT DISTINCT type, name
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
-        AND condition_name.name = %s;
+        AND condition_name.name = %s
     ''', (condition_name,))
     results = c.fetchall()
     c.close()
@@ -33,74 +38,70 @@ def getDataYears(condition_name, data_type):
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT year
+        SELECT DISTINCT datapoint.year
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s
-        ORDER BY year DESC;
+        AND datapoint.type = %s;
     ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
     conn.close()
-    output = [val[0] for val in results]
-    return output
+    return results
 
 def getDataAges(condition_name, data_type):
     '''Lists the age ranges for the given condition and data type'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT min_age, max_age
+        SELECT DISTINCT datapoint.min_age, datapoint.max_age
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s
-        ORDER BY min_age;
+        AND datapoint.type = %s;
     ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
     conn.close()
-    output = [val[0] for val in results]
-    return output
+    return results
 
 def getDataGenders(condition_name, data_type):
     '''Lists the genders for the given condition and data type'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT gender
+        SELECT DISTINCT datapoint.gender
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s
-        ORDER BY gender;
+        AND datapoint.type = %s;
     ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
     conn.close()
-    output = [val[0] for val in results]
-    return output
 
 def getDataRaces(condition_name, data_type):
     '''Lists the races/ethnicities for the given condition and data type'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
     c.execute('''
-        SELECT DISTINCT race_ethnicity
+        SELECT DISTINCT datapoint.race_ethnicity
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s
-        ORDER BY race_ethnicity;
-    ''', (condition_name, data_type))
+        AND datapoint.type = %s,
+        AND datapoint.year = %s,
+        AND datapoint.min_age = %s,
+        AND datapoint.max_age = %s,
+        AND datapoint.gender = %s,
+        AND datapoint.race_ethnicity = %s,
+        ;
+    ''', (condition_name, data_type, year, min_age, max_age, gender, race_ethnicity))
     results = c.fetchall()
     c.close()
     conn.close()
-    output = [val[0] for val in results]
-    return output
 
-def getMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='all', race_ethnicity='all'):
+def getMapData(condition_name, data_type):
     '''Gets a dataset in map plotting format given a condition name and a data type'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
@@ -110,52 +111,10 @@ def getMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='
         WHERE datapoint.condition_id = condition_name.condition_id
         AND datapoint.location_id = location.uid
         AND condition_name.name = %s
-        AND datapoint.type = %s
-        AND datapoint.year = %s
-        AND datapoint.min_age = %s
-        AND datapoint.max_age = %s
-        AND datapoint.gender = %s
-        AND datapoint.race_ethnicity = %s;
-    ''', (condition_name, data_type, year, min_age, max_age, gender, race_ethnicity))
+        AND datapoint.type = %s;
+    ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
     conn.close()
     locations, values = zip(*results)
     return locations, values
-<<<<<<< HEAD
-=======
-
-def updateHistory(condition_name):
-    conn = psycopg2.connect("dbname=health")
-    c = conn.cursor()
-    c.execute('''
-        SELECT condition_id
-        FROM condition_name
-        WHERE condition_name.name = %s;
-    ''', (condition_name,))
-    results = c.fetchone()
-    c.execute('''
-        INSERT INTO history VALUES(NOW(), %s)
-    ''', (results[0],))
-    conn.commit()
-    c.close()
-    conn.close()
-
-def getPopular():
-    conn = psycopg2.connect("dbname=health")
-    c = conn.cursor()
-    c.execute('''
-        SELECT DISTINCT name, COUNT(history.condition_id)
-        FROM history, condition_name
-        WHERE history.condition_id = condition_name.condition_id
-        GROUP BY name
-        ORDER BY COUNT(history.condition_id) DESC;
-    ''')
-    results = c.fetchall()
-    c.close()
-    conn.close()
-    return results
- 
-
-
->>>>>>> 065e920932c2cf4df0da0c5594e163ebc3d51ac7

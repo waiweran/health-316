@@ -41,8 +41,12 @@ def conditions_page():
     c.close()
     conn.close()
 
-@app.route('/locations/<condition_name>')
+@app.route('/locations/<condition_name>', methods=['GET', 'POST'])
 def locations_page(condition_name):
+    if request.method == 'GET':  # this block is only entered when the form is submitted
+        AgeRange = request.args.get('AgeRange')
+        Gender = request.args.get('gender')
+        Race = request.args.get('race')
     db.updateHistory(condition_name)
     datatypes = db.getDataTypes(condition_name)
     y = db.getDataYears(condition_name, datatypes[0])
@@ -62,25 +66,6 @@ def pmi_page():
 @app.route('/map_function/<plot_id>')
 def map_function(plot_id):
     return plots[plot_id]
-
-@app.route('/process_data', methods=['GET', 'POST'])
-def process_data():
-    if request.method == 'GET':  # this block is only entered when the form is submitted
-        AgeRange = request.args.get('AgeRange')
-        Gender = request.args.get('gender')
-        Race = request.args.get('race')
-
-        datatypes = db.getDataTypes(condition_name)
-        locations, values = db.getMapData(condition_name, datatypes[0])
-        gender = db.getDataGenders(Gender,)
-        plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
-        plot_link = hashlib.md5(plot_html.encode()).hexdigest()
-        plots[plot_link] = plot_html
-
-        return render_template('locations.html', plot_link = plot_link)
-
-
-    return '''<h1> Your selected Age Range is **{}**. Your selected Gender is **{}**. Your selected Race is **{}**. '''.format(AgeRange, Gender, Race)
 
 
 if __name__ == "__main__":

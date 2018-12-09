@@ -1,10 +1,13 @@
-from plotly import plotly, tools
+from plotly import plotly, tools, exceptions
 import requests
+import json
 
 username = 'liuharryk'
 accountkey = 'WkCtIN7yoxMvGpuyCzew'
 
 plotly.sign_in(username, accountkey)
+auth = requests.auth.HTTPBasicAuth(username, accountkey)
+headers = {'Plotly-Client-Platform': 'python'}
 
 
 def make_states_plot(plot_locations, plot_data, tooltip_labels, colorscale_label, plot_title):
@@ -40,7 +43,7 @@ def make_states_plot(plot_locations, plot_data, tooltip_labels, colorscale_label
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
-	except PLotlyRequestError:
+	except exceptions.PlotlyRequestError:
 		delete_files(filetype_to_delete='plot')
 		delete_files(filetype_to_delete='grid')
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
@@ -79,7 +82,7 @@ def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_la
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
-	except PLotlyRequestError:
+	except ecxeptions.PlotlyRequestError:
 		delete_files(filetype_to_delete='plot')
 		delete_files(filetype_to_delete='grid')
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
@@ -101,7 +104,7 @@ def get_pages(page_size):
         page = json.loads(response.content)
         yield page
         
-def delete_files(page_size=500, filetype_to_delete='plot'):
+def delete_files(page_size=25, filetype_to_delete='plot'):
     for page in get_pages(page_size):
         for x in range(0, len(page['children']['results'])):
             fid = page['children']['results'][x]['fid']

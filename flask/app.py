@@ -30,7 +30,6 @@ def blog():
 def main_page():
     return render_template('main.html')
 
-
 @app.route('/locations')
 def conditions_page():
     conn = psycopg2.connect("dbname=health")
@@ -62,9 +61,19 @@ def map_function(plot_id):
 @app.route('/process_data', methods=['GET', 'POST'])
 def process_data():
     if request.method == 'GET':  # this block is only entered when the form is submitted
-        AgeRange = request.args.get('key', 'AgeRange')
-        Gender = request.args.get('key', 'Gender')
-        Race = request.args.get('key', 'Race')
+        AgeRange = request.args.get('AgeRange')
+        Gender = request.args.get('gender')
+        Race = request.args.get('race')
+
+        datatypes = db.getDataTypes(condition_name)
+        locations, values = db.getMapData(condition_name, datatypes[0])
+        gender = db.getDataGenders(Gender,)
+        plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
+        plot_link = hashlib.md5(plot_html.encode()).hexdigest()
+        plots[plot_link] = plot_html
+
+        return render_template('locations.html', plot_link = plot_link)
+
 
     return '''<h1> Your selected Age Range is **{}**. Your selected Gender is **{}**. Your selected Race is **{}**. '''.format(AgeRange, Gender, Race)
 

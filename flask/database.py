@@ -80,7 +80,7 @@ def getDataGenders(condition_name, data_type):
     c.close()
     conn.close()
 
-def getDataRaces(condition_name, data_type, ):
+def getDataRaces(condition_name, data_type):
     '''Lists the races/ethnicities for the given condition and data type'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()

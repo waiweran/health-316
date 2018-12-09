@@ -138,3 +138,18 @@ def updateHistory(condition_name):
     c.close()
     conn.close()
 
+def getPopular():
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute('''
+        SELECT DISTINCT condition_id, COUNT(condition_id)
+        FROM history
+        ORDER BY COUNT(condition_id);
+    ''')
+    results = c.fetchall()
+    c.close()
+    conn.close()
+    return results
+ 
+
+

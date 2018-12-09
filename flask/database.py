@@ -1,15 +1,10 @@
 import psycopg2
 
 def getAllConditions():
-    '''Lists the types of data in the database for the given condition'''
+    '''Lists all conditions available in the database'''
     conn = psycopg2.connect("dbname=health")
     c = conn.cursor()
-    c.execute('''
-        SELECT DISTINCT type, name
-        FROM datapoint, condition_name
-        WHERE datapoint.condition_id = condition_name.condition_id
-        AND condition_name.name = %s
-    ''', (condition_name,))
+    c.execute('''SELECT name FROM condition_name;''')
     results = c.fetchall()
     c.close()
     conn.close()
@@ -25,7 +20,7 @@ def getDataTypes(condition_name):
         SELECT DISTINCT type, name
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
-        AND condition_name.name = %s
+        AND condition_name.name = %s;
     ''', (condition_name,))
     results = c.fetchall()
     c.close()
@@ -89,14 +84,8 @@ def getDataRaces(condition_name, data_type, ):
         FROM datapoint, condition_name
         WHERE datapoint.condition_id = condition_name.condition_id
         AND condition_name.name = %s
-        AND datapoint.type = %s,
-        AND datapoint.year = %s,
-        AND datapoint.min_age = %s,
-        AND datapoint.max_age = %s,
-        AND datapoint.gender = %s,
-        AND datapoint.race_ethnicity = %s,
-        ;
-    ''', (condition_name, data_type, year, min_age, max_age, gender, race_ethnicity))
+        AND datapoint.type = %s;
+    ''', (condition_name, data_type))
     results = c.fetchall()
     c.close()
     conn.close()

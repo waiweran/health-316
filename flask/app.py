@@ -42,6 +42,7 @@ def conditions_page():
 
 @app.route('/locations/<condition_name>')
 def locations_page(condition_name):
+    db.updateHistory(condition_name)
     datatypes = db.getDataTypes(condition_name)
     y = db.getDataYears(condition_name, datatypes[0])
     g = db.getDataGenders(condition_name,datatypes[0])

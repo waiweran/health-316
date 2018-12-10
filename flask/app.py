@@ -9,24 +9,12 @@ app = Flask(__name__)
 
 plots = dict()
 
-@app.route('/login')
-def login_page():
-    return render_template('login.html')
-
 @app.route('/top_diseases')
 def top_diseases():
     tt = db.getPopular()
     tt = tt[:10]
     tt = [val[0] + ": " + str(val[1]) + " searches" for val in tt]
     return render_template('top_diseases.html', topten = tt)
-
-@app.route('/blog_form')
-def blog_form():
-    return render_template('blog_form.html')
-
-@app.route('/blog')
-def blog():
-    return render_template('blog.html')
 
 @app.route('/')
 def main_page():

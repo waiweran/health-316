@@ -62,7 +62,7 @@ def locations_page(condition_name):
     plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html
-    return render_template('locations.html', plot_link = plot_link, genders = g, races=r)
+    return render_template('locations.html', plot_link = plot_link, condition_name = condition_name, genders = g, races=r)
 
 @app.route('/PMIdata')
 def pmi_page():

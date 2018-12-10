@@ -16,6 +16,7 @@ def top_diseases():
     tod = db.getPopularToday()
     tod = tod[:10]
     tt = [val[0] + ": " + str(val[1]) + " searches" for val in tt]
+    tod = [val[0] + ": " + str(val[1]) + " searches" for val in tod]
     return render_template('top_diseases.html', topten = tt, today = tod)
 
 @app.route('/')

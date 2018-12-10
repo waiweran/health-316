@@ -67,12 +67,12 @@ def map_function(plot_id):
 
 @app.route('/process_data', methods=['GET', 'POST'])
 def process_data():
+    
+    if request.method == 'POST':
+        Agerange = request.form.get('AgeRange')
+        
+    return '''<h1> The age range you entered is: **{}**.</hl>'''.format(Agerange)
 
-    if request.method == 'GET':  # this block is only entered when the form is submitted
-        conditionName = request.form.get('conditionName', 'None')
-    Agerange = request.form.get('AgeRange')
-
-    return '''<h1> The condition name you entered is: **{}**. Your selected GDP value is **{}**. Your selected AI value is **{}**. Your selected Pop value is **{}**.  {} people died in the US in 2016 from your disease'''.format(conditionName, GDPrange, AIrange, Poprange, mortality)
 
 
 if __name__ == "__main__":

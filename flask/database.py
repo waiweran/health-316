@@ -120,6 +120,33 @@ def getMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='
     results = c.fetchall()
     c.close()
     conn.close()
+    if len(results) == 0:
+        return [], []
+    locations, values = zip(*results)
+    return locations, values
+
+def getScaledMapData(condition_name, data_type, year, min_age=-1, max_age=-1, gender='all', race_ethnicity='all'):
+    '''Gets a dataset scaled by population in map plotting format given a condition name and a data type'''
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute('''
+        SELECT location.abbr, datapoint.value/location.population
+        FROM datapoint, condition_name, location
+        WHERE datapoint.condition_id = condition_name.condition_id
+        AND datapoint.location_id = location.uid
+        AND condition_name.name = %s
+        AND datapoint.type = %s
+        AND datapoint.year = %s
+        AND datapoint.min_age = %s
+        AND datapoint.max_age = %s
+        AND datapoint.gender = %s
+        AND datapoint.race_ethnicity = %s;
+    ''', (condition_name, data_type, year, min_age, max_age, gender, race_ethnicity))
+    results = c.fetchall()
+    c.close()
+    conn.close()
+    if len(results) == 0:
+        return [], []
     locations, values = zip(*results)
     return locations, values
 
@@ -153,6 +180,4 @@ def getPopular():
     c.close()
     conn.close()
     return results
- 
-
 

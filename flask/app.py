@@ -9,10 +9,6 @@ app = Flask(__name__)
 
 plots = dict()
 
-@app.route('/login')
-def login_page():
-    return render_template('login.html')
-
 @app.route('/top_diseases')
 def top_diseases():
     tt = db.getPopular()
@@ -20,18 +16,9 @@ def top_diseases():
     tt = [val[0] + ": " + str(val[1]) + " searches" for val in tt]
     return render_template('top_diseases.html', topten = tt)
 
-@app.route('/blog_form')
-def blog_form():
-    return render_template('blog_form.html')
-
-@app.route('/blog')
-def blog():
-    return render_template('blog.html')
-
 @app.route('/')
 def main_page():
     return render_template('main.html')
-
 
 @app.route('/locations')
 def conditions_page():
@@ -43,19 +30,28 @@ def conditions_page():
     c.close()
     conn.close()
 
-@app.route('/locations/<condition_name>')
+@app.route('/locations/<condition_name>', methods=['GET', 'POST'])
 def locations_page(condition_name):
+    Gender='None'
+    Race='None'
+    if request.method == 'POST':  # this block is only entered when the form is submitted
+        AgeRange = request.form.get('AgeRange')
+        Gender = request.form.get('gender')
+        Race = request.form.get('race')
     db.updateHistory(condition_name)
     datatypes = db.getDataTypes(condition_name)
     y = db.getDataYears(condition_name, datatypes[0])
-    g = db.getDataGenders(condition_name,datatypes[0])
-    r = db.getDataRaces(condition_name,datatypes[0])
-    locations, values = db.getMapData(condition_name, datatypes[0], y[0])
-    plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
+    g = db.getDataGenders(condition_name, datatypes[0])
+    r = db.getDataRaces(condition_name, datatypes[0])
+    if Gender == 'None':
+        Gender = g[0]
+    if Race == 'None':
+        Race = r[0]
+    locations, values = db.getMapData(condition_name, datatypes[0], y[0], gender=Gender, race_ethnicity=Race)
+    plot_html = plot.make_states_plot(locations, values, locations, datatypes[0], condition_name)
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html
-
-    return render_template('locations.html', plot_link = plot_link, genders = g, races=r)
+    return render_template('locations.html', plot_link = plot_link, condition_name = condition_name, genders = g, races=r)
 
 @app.route('/PMIdata')
 def pmi_page():
@@ -64,16 +60,6 @@ def pmi_page():
 @app.route('/map_function/<plot_id>')
 def map_function(plot_id):
     return plots[plot_id]
-
-@app.route('/process_data', methods=['GET', 'POST'])
-def process_data():
-    
-    if request.method == 'POST':
-        Agerange = request.form.get('AgeRange')
-        
-    return '''<h1> The age range you entered is: **{}**.</hl>'''.format(Agerange)
-
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

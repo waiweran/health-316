@@ -41,12 +41,6 @@
                     </p>
 
                     <label id="formitem">
-                        <h3>Age</h3>
-                        <input type="range" min="1" max="100" value="20" class="formitem" id="AgeRange" name="AgeRange"/>
-                        <h4>Value: <span id="outputAge"></span></h4>
-                    </label>
-
-                    <label id="formitem">
                         <h3>Gender</h3>
                         {% for option in genders %}
                         <input type="radio" name="gender" value={{option}}> {{option}}<br>
@@ -60,6 +54,12 @@
                         {% endfor %}
                     </label>
 
+                    <label id="formitem">
+                        <h3>DataType</h3>
+                        {% for option in datatypes %}
+                        <input type="radio" name="race" value={{option}}> {{option}}<br>
+                        {% endfor %}
+                    </label>
 
                     <!–– Submission -->
                     <label>

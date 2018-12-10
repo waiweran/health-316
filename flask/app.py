@@ -20,7 +20,6 @@ def top_diseases():
 def main_page():
     return render_template('main.html')
 
-
 @app.route('/locations')
 def conditions_page():
     conn = psycopg2.connect("dbname=health")
@@ -31,19 +30,28 @@ def conditions_page():
     c.close()
     conn.close()
 
-@app.route('/locations/<condition_name>')
+@app.route('/locations/<condition_name>', methods=['GET', 'POST'])
 def locations_page(condition_name):
+    Gender='None'
+    Race='None'
+    if request.method == 'POST':  # this block is only entered when the form is submitted
+        AgeRange = request.form.get('AgeRange')
+        Gender = request.form.get('gender')
+        Race = request.form.get('race')
     db.updateHistory(condition_name)
     datatypes = db.getDataTypes(condition_name)
     y = db.getDataYears(condition_name, datatypes[0])
-    g = db.getDataGenders(condition_name,datatypes[0])
-    r = db.getDataRaces(condition_name,datatypes[0])
-    locations, values = db.getMapData(condition_name, datatypes[0], y[0])
+    g = db.getDataGenders(condition_name, datatypes[0])
+    r = db.getDataRaces(condition_name, datatypes[0])
+    if Gender == 'None':
+        Gender = g[0]
+    if Race == 'None':
+        Race = r[0]
+    locations, values = db.getMapData(condition_name, datatypes[0], y[0], gender=Gender, race_ethnicity=Race)
     plot_html = plot.make_states_plot(locations, values, locations, datatypes[0], condition_name)
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html
-
-    return render_template('locations.html', plot_link = plot_link, genders = g, races=r)
+    return render_template('locations.html', plot_link = plot_link, condition_name = condition_name, genders = g, races=r)
 
 @app.route('/PMIdata')
 def pmi_page():
@@ -52,16 +60,6 @@ def pmi_page():
 @app.route('/map_function/<plot_id>')
 def map_function(plot_id):
     return plots[plot_id]
-
-@app.route('/process_data', methods=['GET', 'POST'])
-def process_data():
-
-    if request.method == 'GET':  # this block is only entered when the form is submitted
-        conditionName = request.form.get('conditionName', 'None')
-    Agerange = request.form.get('AgeRange')
-
-    return '''<h1> The condition name you entered is: **{}**. Your selected GDP value is **{}**. Your selected AI value is **{}**. Your selected Pop value is **{}**.  {} people died in the US in 2016 from your disease'''.format(conditionName, GDPrange, AIrange, Poprange, mortality)
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

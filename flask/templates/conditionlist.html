@@ -19,9 +19,9 @@
         </div>
 
         <div class=clist>
-            
+
             <ul>
-                {% for condition in condition_name %}     
+                {% for condition in condition_name %}
                 <li><a href="{{url_for('locations_page', condition_name=condition[0])}}">{{condition[0]}}</a></li>
                 {% endfor %}
             </ul>

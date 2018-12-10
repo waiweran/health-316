@@ -2,8 +2,8 @@ from plotly import plotly, tools, exceptions
 import requests
 import json
 
-username = 'liuharryk'
-accountkey = 'WkCtIN7yoxMvGpuyCzew'
+username = 'gaby.rfp'
+accountkey = 'ATf8Nfq6ondzxkIPZ8ld'
 
 plotly.sign_in(username, accountkey)
 auth = requests.auth.HTTPBasicAuth(username, accountkey)
@@ -39,7 +39,7 @@ def make_states_plot(plot_locations, plot_data, tooltip_labels, colorscale_label
 	            showlakes = False,
 	            lakecolor = 'rgb(255, 255, 255)'),
 	             )
-	    
+
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
@@ -76,12 +76,9 @@ def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_la
 	        )
 	    )
 	)
-	    
+
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
 	except exceptions.PlotlyRequestError as e:
 		return "Plot limit reached: " + str(e)
-
-
-

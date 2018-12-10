@@ -180,3 +180,4 @@ def getPopular():
     c.close()
     conn.close()
     return results
+

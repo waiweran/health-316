@@ -9,23 +9,12 @@ app = Flask(__name__)
 
 plots = dict()
 
-@app.route('/login')
-def login_page():
-    return render_template('login.html')
-
 @app.route('/top_diseases')
 def top_diseases():
     tt = db.getPopular()
     tt = tt[:10]
+    tt = [val[0] + ": " + str(val[1]) + " searches" for val in tt]
     return render_template('top_diseases.html', topten = tt)
-
-@app.route('/blog_form')
-def blog_form():
-    return render_template('blog_form.html')
-
-@app.route('/blog')
-def blog():
-    return render_template('blog.html')
 
 @app.route('/')
 def main_page():
@@ -59,7 +48,7 @@ def locations_page(condition_name):
     if Race == 'None':
         Race = r[0]
     locations, values = db.getMapData(condition_name, datatypes[0], y[0], gender=Gender, race_ethnicity=Race)
-    plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
+    plot_html = plot.make_states_plot(locations, values, locations, datatypes[0], condition_name)
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html
     return render_template('locations.html', plot_link = plot_link, condition_name = condition_name, genders = g, races=r)

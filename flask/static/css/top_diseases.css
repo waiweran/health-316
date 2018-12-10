@@ -3,7 +3,7 @@
 ol, li, p, h4 {
   margin: 0;
   font-weight: bold;
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin-right: 0.5rem;
   font-family: 'Abril Fatface', serif;
   line-height: 1;
@@ -37,24 +37,45 @@ h3 {
 ol {
   counter-reset: section;
     position: absolute;
+    width: 100%;
     top: 25%;
-    left: 25%;
+    left:0;
     border-radius: 2px;
+    margin: 0;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+}
+
+.column{
+    flex: 50%;
+    align-self: center;
+    text-align: center;
+    
 }
 
 h4 {
   position: relative;
-  padding-bottom: 10px;
+}
+
+h4 .title {
+    content: "";
+  position: relative;
+    height: 1px;
 }
 
 h4:after {
-  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   width: 200px;
-  height: 1px;
   background: white;
+    
 }
 
 p {

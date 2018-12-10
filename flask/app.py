@@ -37,11 +37,9 @@ def conditions_page():
 def locations_page(condition_name):
     Gender=None
     Race=None
-    Datatype=None
     if request.method == 'POST':  # this block is only entered when the form is submitted
         Gender = request.form.get('gender')
         Race = request.form.get('race')
-        Datatype = request.form.get('datatype')
     db.updateHistory(condition_name)
     datatypes = db.getDataTypes(condition_name)
     y = db.getDataYears(condition_name, datatypes[0])
@@ -51,10 +49,8 @@ def locations_page(condition_name):
         Gender = 'all'
     if Race == None:
         Race = 'all'
-    if Datatype == None:
-        Datatype = datatypes[0]
-    locations, values = db.getMapData(condition_name, Datatype, y[0], gender=Gender, race_ethnicity=Race)
-    plot_html = plot.make_states_plot(locations, values, locations, Datatype, condition_name)
+    locations, values = db.getMapData(condition_name, datatypes[0], y[0], gender=Gender, race_ethnicity=Race)
+    plot_html = plot.make_states_plot(locations, values, locations, datatypes[0], condition_name)
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html
     return render_template('locations.html', plot_link = plot_link, condition_name = condition_name, genders = g, races=r, datatypes=datatypes)

@@ -43,8 +43,8 @@ def make_states_plot(plot_locations, plot_data, tooltip_labels, colorscale_label
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
-	except ecxeptions.PlotlyRequestError as e:
-		return "Plot Limit Reached: " + str(e)
+	except exceptions.PlotlyRequestError as e:
+		return "Plot limit reached: " + str(e)
 
 def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_label, plot_title):
 	scl = [[0.0, 'rgb(242,240,247)'],[0.2, 'rgb(218,218,235)'],[0.4, 'rgb(188,189,220)'],\
@@ -80,5 +80,8 @@ def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_la
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
-	except ecxeptions.PlotlyRequestError as e:
-		return "Plot Limit Reached: " + str(e)
+	except exceptions.PlotlyRequestError as e:
+		return "Plot limit reached: " + str(e)
+
+
+

@@ -48,9 +48,9 @@ def locations_page(condition_name):
     g = db.getDataGenders(condition_name, datatypes[0])
     r = db.getDataRaces(condition_name, datatypes[0])
     if Gender == None:
-        Gender = g[0]
+        Gender = 'all'
     if Race == None:
-        Race = r[0]
+        Race = 'all'
     if Datatype == None:
         Datatype = datatypes[0]
     locations, values = db.getMapData(condition_name, Datatype, y[0], gender=Gender, race_ethnicity=Race)

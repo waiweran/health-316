@@ -43,10 +43,8 @@ def make_states_plot(plot_locations, plot_data, tooltip_labels, colorscale_label
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
-	except exceptions.PlotlyRequestError:
-		delete_files(filetype_to_delete='plot')
-		delete_files(filetype_to_delete='grid')
-		return tools.get_embed(plotly.plot(fig, auto_open=False))
+	except ecxeptions.PlotlyRequestError, e:
+		return "Plot Limit Reached: " + str(e)
 
 def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_label, plot_title):
 	scl = [[0.0, 'rgb(242,240,247)'],[0.2, 'rgb(218,218,235)'],[0.4, 'rgb(188,189,220)'],\
@@ -82,37 +80,5 @@ def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_la
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
-	except ecxeptions.PlotlyRequestError:
-		delete_files(filetype_to_delete='plot')
-		delete_files(filetype_to_delete='grid')
-		return tools.get_embed(plotly.plot(fig, auto_open=False))
-
-def get_pages(page_size):
-    url = 'https://api.plot.ly/v2/folders/all?user='+username+'&page_size='+str(page_size)
-    response = requests.get(url, auth=auth, headers=headers)
-    if response.status_code != 200:
-        return
-    page = json.loads(response.content)
-    yield page
-    while True:
-        resource = page['children']['next'] 
-        if not resource:
-            break
-        response = requests.get(resource, auth=auth, headers=headers)
-        if response.status_code != 200:
-            break
-        page = json.loads(response.content)
-        yield page
-        
-def delete_files(page_size=25, filetype_to_delete='plot'):
-    for page in get_pages(page_size):
-        for x in range(0, len(page['children']['results'])):
-            fid = page['children']['results'][x]['fid']
-            res = requests.get('https://api.plot.ly/v2/files/' + fid, auth=auth, headers=headers)
-            res.raise_for_status()
-            if res.status_code == 200:
-                json_res = json.loads(res.content)
-                if json_res['filetype'] == filetype_to_delete:
-                    # move to trash
-                    requests.post('https://api.plot.ly/v2/files/'+fid+'/trash', auth=auth, headers=headers)
-
+	except ecxeptions.PlotlyRequestError, e:
+		return "Plot Limit Reached: " + str(e)

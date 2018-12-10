@@ -1,0 +1,9 @@
+Health-316 Team Members
+
+As of 12/10 submit date
+
+Nathaniel Brooke - Worked on parsing data, setting up the google cloud VM and the web server, writing and executing queries using psycopg2, and creating map visualizations using Plotly.
+Gouttham Chandrasekar - Worked on flask and parsing data. Gathered data from WHO to fit schema. Front end HTML/CSS/Javascript. 
+Harry Liu - Worked on the front end web interface and design and figured out how that connects to the flask to backend. Also did initial implementation of Plotly.
+August Ning - Worked on gathering and parsing data for final data files, got the domain name. Wrote parsers for fitting health data to schema, and applied ids to locations and conditions. 
+Gaby Rodriguez-Florido - Worked on gathering data, transcribed work to docs, and worked on the backend flask and sql queries, espcially with demographic filters. 

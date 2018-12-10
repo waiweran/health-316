@@ -44,19 +44,22 @@ def conditions_page():
 @app.route('/locations/<condition_name>', methods=['GET', 'POST'])
 def locations_page(condition_name):
     if request.method == 'GET':  # this block is only entered when the form is submitted
-        AgeRange = request.args.get('AgeRange')
-        Gender = request.args.get('gender')
-        Race = request.args.get('race')
+        AgeRange = request.form.get('AgeRange')
+        Gender = request.form.get('gender')
+        Race = request.form.get('race')
     db.updateHistory(condition_name)
     datatypes = db.getDataTypes(condition_name)
     y = db.getDataYears(condition_name, datatypes[0])
-    g = db.getDataGenders(condition_name,datatypes[0])
-    r = db.getDataRaces(condition_name,datatypes[0])
-    locations, values = db.getMapData(condition_name, datatypes[0], y[0])
+    g = db.getDataGenders(condition_name, datatypes[0])
+    r = db.getDataRaces(condition_name, datatypes[0])
+    if Gender == None:
+        Gender = g[0]
+    if Race == None:
+        Race = r[0]
+    locations, values = db.getMapData(condition_name, datatypes[0], y[0], gender=Gender, race_ethnicity=Race)
     plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
     plot_link = hashlib.md5(plot_html.encode()).hexdigest()
     plots[plot_link] = plot_html
-
     return render_template('locations.html', plot_link = plot_link, genders = g, races=r)
 
 @app.route('/PMIdata')
@@ -66,7 +69,6 @@ def pmi_page():
 @app.route('/map_function/<plot_id>')
 def map_function(plot_id):
     return plots[plot_id]
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

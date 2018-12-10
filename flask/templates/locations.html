@@ -26,7 +26,7 @@
 
             <div class="leftnav-content">
 
-                <form action="{{ url_for('locations') }}" method="GET">
+                <form action="{{url_for('locations_page', condition_name=condition[0])}}" method="GET">
                     <!–– Condition Text -->
 
                     <h3>Your selected condition</h3>

@@ -2,8 +2,8 @@ from plotly import plotly, tools, exceptions
 import requests
 import json
 
-username = 'liuharryk'
-accountkey = 'WkCtIN7yoxMvGpuyCzew'
+username = 'gaby.rfp'
+accountkey = 'ATf8Nfq6ondzxkIPZ8ld'
 
 plotly.sign_in(username, accountkey)
 auth = requests.auth.HTTPBasicAuth(username, accountkey)
@@ -39,7 +39,7 @@ def make_states_plot(plot_locations, plot_data, tooltip_labels, colorscale_label
 	            showlakes = False,
 	            lakecolor = 'rgb(255, 255, 255)'),
 	             )
-	    
+
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
@@ -78,7 +78,7 @@ def make_countries_plot(plot_locations, plot_data, tooltip_labels, colorscale_la
 	        )
 	    )
 	)
-	    
+
 	fig = dict( data=data, layout=layout )
 	try:
 		return tools.get_embed(plotly.plot(fig, auto_open=False))
@@ -95,7 +95,7 @@ def get_pages(page_size):
     page = json.loads(response.content)
     yield page
     while True:
-        resource = page['children']['next'] 
+        resource = page['children']['next']
         if not resource:
             break
         response = requests.get(resource, auth=auth, headers=headers)
@@ -103,7 +103,7 @@ def get_pages(page_size):
             break
         page = json.loads(response.content)
         yield page
-        
+
 def delete_files(page_size=25, filetype_to_delete='plot'):
     for page in get_pages(page_size):
         for x in range(0, len(page['children']['results'])):
@@ -115,4 +115,3 @@ def delete_files(page_size=25, filetype_to_delete='plot'):
                 if json_res['filetype'] == filetype_to_delete:
                     # move to trash
                     requests.post('https://api.plot.ly/v2/files/'+fid+'/trash', auth=auth, headers=headers)
-

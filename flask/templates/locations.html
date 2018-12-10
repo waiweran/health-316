@@ -88,7 +88,7 @@
         
         var x = document.URL;
         var y = x;
-        x = x.substr(y.lastIndexOf('/')+1).split("%20").join(" ")
+        x = x.substr(y.lastIndexOf('/')+1).split("%20").join(" ").split("%27").join("'")
         document.getElementById("cname").innerHTML = x;
 
     </script>    

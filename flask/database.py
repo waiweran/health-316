@@ -181,3 +181,18 @@ def getPopular():
     conn.close()
     return results
 
+def getPopularToday():
+    conn = psycopg2.connect("dbname=health")
+    c = conn.cursor()
+    c.execute('''
+        SELECT DISTINCT name, COUNT(history.condition_id)
+        FROM history, condition_name
+        WHERE history.condition_id = condition_name.condition_id
+        AND history.entry_timestamp >= DATE_TRUNC('day', NOW())
+        GROUP BY name
+        ORDER BY COUNT(history.condition_id) DESC;
+    ''')
+    results = c.fetchall()
+    c.close()
+    conn.close()
+    return results

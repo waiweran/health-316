@@ -2,8 +2,8 @@ from plotly import plotly, tools, exceptions
 import requests
 import json
 
-username = 'liuharryk'
-accountkey = 'L1O0g0nPrpVEkDA3SGi7'
+username = 'augustning'
+accountkey = 'fjFaA6Af6vDjuZmjLNa0'
 
 plotly.sign_in(username, accountkey)
 auth = requests.auth.HTTPBasicAuth(username, accountkey)

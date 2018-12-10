@@ -188,7 +188,7 @@ def getPopularToday():
         SELECT DISTINCT name, COUNT(history.condition_id)
         FROM history, condition_name
         WHERE history.condition_id = condition_name.condition_id
-        AND history.entry_timestamp <= NOW() - INTERVAL '1 day'
+        AND history.entry_timestamp >= NOW() - INTERVAL '1 day'
         GROUP BY name
         ORDER BY COUNT(history.condition_id) DESC;
     ''')

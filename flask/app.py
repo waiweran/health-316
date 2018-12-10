@@ -17,6 +17,7 @@ def login_page():
 def top_diseases():
     tt = db.getPopular()
     tt = tt[:10]
+    tt = [val[0] + ": " + str(val[1]) + " searches" for val in tt]
     return render_template('top_diseases.html', topten = tt)
 
 @app.route('/blog_form')

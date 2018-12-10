@@ -43,7 +43,9 @@ def conditions_page():
 
 @app.route('/locations/<condition_name>', methods=['GET', 'POST'])
 def locations_page(condition_name):
-    if request.method == 'GET':  # this block is only entered when the form is submitted
+    Gender='None'
+    Race='None'
+    if request.method == 'POST':  # this block is only entered when the form is submitted
         AgeRange = request.form.get('AgeRange')
         Gender = request.form.get('gender')
         Race = request.form.get('race')
@@ -52,9 +54,9 @@ def locations_page(condition_name):
     y = db.getDataYears(condition_name, datatypes[0])
     g = db.getDataGenders(condition_name, datatypes[0])
     r = db.getDataRaces(condition_name, datatypes[0])
-    if Gender == None:
+    if Gender == 'None':
         Gender = g[0]
-    if Race == None:
+    if Race == 'None':
         Race = r[0]
     locations, values = db.getMapData(condition_name, datatypes[0], y[0], gender=Gender, race_ethnicity=Race)
     plot_html = plot.make_states_plot(locations, values, locations, 'Scale', 'Plot')
